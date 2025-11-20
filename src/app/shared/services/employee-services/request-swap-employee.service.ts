@@ -26,14 +26,6 @@ export class RequestSwapEmployeeService {
    * @returns {string} The employee's UUID if authenticated, empty string if not authenticated or on error
    *
    * @throws {Alert} Shows alert dialog if employee is not logged in when parsing fails
-   *
-   * @example
-   * ```typescript
-   * const employeeId = this.requestSwapEmployeeService.getUuid();
-   * if (employeeId) {
-   *   // Employee is authenticated, proceed with swap request operations
-   * }
-   * ```
    */
   getUuid(): string {
     const loggedInUser = localStorage.getItem('auth');
@@ -57,17 +49,6 @@ export class RequestSwapEmployeeService {
    * @returns {Observable<ShiftDashboardResponse[]>} Observable array of future shifts available for swapping
    *
    * @throws {HttpError} HTTP error if the request fails, employee is not found, or unauthorized access
-   *
-   * @example
-   * ```typescript
-   * this.requestSwapEmployeeService.getLoggedInEmployeeShiftsInForm().subscribe({
-   *   next: (availableShifts) => {
-   *     this.employeeShiftsForSwap = availableShifts;
-   *     this.populateSwapRequestForm(availableShifts);
-   *   },
-   *   error: (error) => console.error('Failed to load available shifts for swap:', error)
-   * });
-   * ```
    */
   getLoggedInEmployeeShiftsInForm(): Observable<ShiftDashboardResponse[]> {
     const uuid = this.getUuid();
@@ -90,17 +71,6 @@ export class RequestSwapEmployeeService {
    * @returns {Observable<TeamMembersWithShift[]>} Observable array of team members with their associated upcoming shifts
    *
    * @throws {HttpError} HTTP error if the request fails, team information is not accessible, or unauthorized access
-   *
-   * @example
-   * ```typescript
-   * this.requestSwapEmployeeService.getTeamMembersWithUpcomingShifts().subscribe({
-   *   next: (teamMembersWithShifts) => {
-   *     this.availableSwapPartners = teamMembersWithShifts;
-   *     this.buildSwapTargetOptions(teamMembersWithShifts);
-   *   },
-   *   error: (error) => console.error('Failed to load team members with shifts:', error)
-   * });
-   * ```
    */
   getTeamMembersWithUpcomingShifts(): Observable<TeamMembersWithShift[]> {
     const uuid = this.getUuid();
@@ -126,35 +96,8 @@ export class RequestSwapEmployeeService {
    * @returns {Observable<any>} Observable containing the created swap request confirmation
    *
    * @throws {HttpError} HTTP error if validation fails, shift conflicts exist, or unauthorized access
-   *
-   * @example
-   * ```typescript
-   * const swapRequest: CreateShiftSwapRequestPayload = {
-   *   requesterId: this.currentEmployeeId,
-   *   requesterShiftId: 'shift-123',
-   *   targetEmployeeId: 'emp-456',
-   *   targetShiftId: 'shift-789',
-   *   reason: 'Family commitment on original shift date',
-   *   requestDate: new Date()
-   * };
-   *
-   * this.requestSwapEmployeeService.createSwapRequest(swapRequest).subscribe({
-   *   next: (response) => {
-   *     this.showSuccess('Swap request submitted successfully!');
-   *     this.refreshSwapRequests();
-   *     this.closeSwapRequestModal();
-   *   },
-   *   error: (error) => {
-   *     if (error.status === 409) {
-   *       this.showError('Shift conflict detected. Please choose different shifts.');
-   *     } else {
-   *       this.showError('Failed to submit swap request: ' + error.message);
-   *     }
-   *   }
-   * });
-   * ```
    */
-  createSwapRequest(payload: CreateShiftSwapRequestPayload) {
+  createSwapRequest(payload: CreateShiftSwapRequestPayload): Observable<any> {
     const url = `${this.shiftSwapEndpoint}/create`;
     return this.http.post(url, payload);
   }

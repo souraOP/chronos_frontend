@@ -26,9 +26,6 @@ export class AuthService {
   /** Login message status signal for displaying success/failure feedback */
   public loginMessageStatus = signal<LoginMessageStatus>(null);
 
-  /** Active login subscription for cleanup management */
-  public loginSubscription: Subscription | null = null;
-
   /** Current authenticated user signal with automatic storage integration */
   private user = signal<AuthUser | null>(this.readFromStorage());
 
@@ -46,12 +43,6 @@ export class AuthService {
    *
    * @private
    * @returns {AuthUser | null} Parsed authentication user object or null if not found or invalid
-   *
-   * @example
-   * ```typescript
-   * // This method is called internally during service initialization
-   * const storedUser = this.readFromStorage();
-   * ```
    */
   private readFromStorage(): AuthUser | null {
     try {
@@ -71,15 +62,6 @@ export class AuthService {
    *
    * @private
    * @param {AuthUser | null} user - User authentication object to store, or null to remove
-   *
-   * @example
-   * ```typescript
-   * // Store authentication data
-   * this.writeToStorage(authUser);
-   *
-   * // Clear authentication data
-   * this.writeToStorage(null);
-   * ```
    */
   private writeToStorage(user: AuthUser | null) {
     if (user) {
@@ -97,15 +79,6 @@ export class AuthService {
    * the application for user context and authorization decisions.
    *
    * @returns {AuthUser | null} Current authenticated user object or null if not authenticated
-   *
-   * @example
-   * ```typescript
-   * const currentUser = this.authService.getUser();
-   * if (currentUser) {
-   *   console.log('User role:', currentUser.role);
-   *   console.log('User email:', currentUser.email);
-   * }
-   * ```
    */
   getUser(): AuthUser | null {
     return this.user();
@@ -119,15 +92,6 @@ export class AuthService {
    * authenticated API access.
    *
    * @returns {string | null} JWT authentication token or null if user is not authenticated
-   *
-   * @example
-   * ```typescript
-   * const authToken = this.authService.getToken();
-   * if (authToken) {
-   *   // Use token for authenticated API requests
-   *   headers = headers.set('Authorization', `Bearer ${authToken}`);
-   * }
-   * ```
    */
   getToken(): string | null {
     return this.user()?.token ?? null;
@@ -141,15 +105,6 @@ export class AuthService {
    * UI updates based on authentication state changes.
    *
    * @returns {Signal<boolean>} Loading state signal
-   *
-   * @example
-   * ```typescript
-   * // In component
-   * isLoading = this.authService.isLoadingFunc();
-   *
-   * // In template
-   * // <div *ngIf="isLoading()">Loading...</div>
-   * ```
    */
   isLoadingFunc() {
     return this.isLoading;
@@ -163,16 +118,6 @@ export class AuthService {
    * reactive feedback to users during login operations.
    *
    * @returns {Signal<LoginMessageStatus>} Login message status signal
-   *
-   * @example
-   * ```typescript
-   * // In component
-   * loginStatus = this.authService.logInMessageStatusFunc();
-   *
-   * // In template
-   * // <div *ngIf="loginStatus() === 'failed'" class="error">Login failed</div>
-   * // <div *ngIf="loginStatus() === 'success'" class="success">Login successful</div>
-   * ```
    */
   logInMessageStatusFunc() {
     return this.loginMessageStatus;
@@ -191,23 +136,8 @@ export class AuthService {
    * @returns {void}
    *
    * @throws {HttpError} HTTP error if authentication fails due to invalid credentials or server issues
-   *
-   * @example
-   * ```typescript
-   * // Employee login
-   * this.authService.login(this.loginForm, 'Employee');
-   *
-   * // Manager login
-   * this.authService.login(this.loginForm, 'Manager');
-   *
-   * // Login form setup
-   * this.loginForm = this.formBuilder.group({
-   *   email: ['', [Validators.required, Validators.email]],
-   *   password: ['', [Validators.required, Validators.minLength(6)]]
-   * });
-   * ```
    */
-  login(loginForm: FormGroup, role: 'Employee' | 'Manager' = 'Employee') {
+  login(loginForm: FormGroup, role: 'Employee' | 'Manager' = 'Employee'): void {
     if (loginForm.invalid) {
       loginForm.markAllAsTouched();
       this.loginMessageStatus.set('failed');
@@ -259,21 +189,8 @@ export class AuthService {
    * security cleanup and prevents unauthorized access after logout.
    *
    * @returns {void}
-   *
-   * @example
-   * ```typescript
-   * // Logout button click handler
-   * onLogout() {
-   *   this.authService.logout();
-   * }
-   *
-   * // Automatic logout on token expiration
-   * if (this.isTokenExpired()) {
-   *   this.authService.logout();
-   * }
-   * ```
    */
-  logout() {
+  logout(): void {
     this.user.set(null);
     this.writeToStorage(null);
     this.router.navigate([''], { replaceUrl: true });

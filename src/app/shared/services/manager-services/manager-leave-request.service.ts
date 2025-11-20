@@ -66,12 +66,4 @@ export class ManagerLeaveRequestService {
     const payload = { action };
     return this.http.post<void>(url, payload, { params });
   }
-
-  approveLeaveRequest(leaveRequestId: string) {
-    return this.actionOnLeaveRequest(leaveRequestId, LeaveStatus.APPROVED);
-  }
-
-  rejectLeaveRequest(leaveRequestId: string) {
-    return this.actionOnLeaveRequest(leaveRequestId, LeaveStatus.REJECTED);
-  }
 }

@@ -23,14 +23,6 @@ export class EmployeeUserProfileService {
    * @returns {string} The employee's UUID if authenticated, empty string if not authenticated or on error
    *
    * @throws {Alert} Shows alert dialog if employee is not logged in when parsing fails
-   *
-   * @example
-   * ```typescript
-   * const employeeId = this.employeeUserProfileService.getUuid();
-   * if (employeeId) {
-   *   // Employee is authenticated, proceed with profile operations
-   * }
-   * ```
    */
   getUuid(): string {
     const loggedInUser = localStorage.getItem('auth');
@@ -54,19 +46,6 @@ export class EmployeeUserProfileService {
    * @returns {Observable<Employee>} Observable containing complete employee profile information
    *
    * @throws {HttpError} HTTP error if the request fails, employee is not found, or unauthorized access
-   *
-   * @example
-   * ```typescript
-   * this.employeeUserProfileService.getEmployeeDetails().subscribe({
-   *   next: (employee) => {
-   *     this.employeeProfile = employee;
-   *     this.displayName = `${employee.firstName} ${employee.lastName}`;
-   *     this.jobTitle = employee.jobTitle;
-   *     this.department = employee.departmentName;
-   *   },
-   *   error: (error) => console.error('Failed to load employee details:', error)
-   * });
-   * ```
    */
   getEmployeeDetails(): Observable<Employee> {
     const uuid = this.getUuid();
@@ -82,19 +61,8 @@ export class EmployeeUserProfileService {
    * by user actions from the profile management interface.
    *
    * @returns {void}
-   *
-   * @example
-   * ```typescript
-   * // In component template
-   * // <button (click)="changePassword()">Change Password</button>
-   *
-   * // In component
-   * changePassword() {
-   *   this.employeeUserProfileService.onClickChangePassword();
-   * }
-   * ```
    */
-  onClickChangePassword() {
+  onClickChangePassword(): void {
     this.router.navigate(['change-password']);
   }
 }

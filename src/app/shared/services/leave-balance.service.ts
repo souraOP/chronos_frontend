@@ -23,14 +23,6 @@ export class LeaveBalanceService {
    * @returns {string} The user's UUID if authenticated, empty string if not authenticated or on error
    *
    * @throws {Alert} Shows alert dialog if user is not logged in when parsing fails
-   *
-   * @example
-   * ```typescript
-   * const userId = this.leaveBalanceService.getUuid();
-   * if (userId) {
-   *   // User is authenticated, proceed with leave balance operations
-   * }
-   * ```
    */
   getUuid(): string {
     const loggedInUser = localStorage.getItem('auth');
@@ -58,23 +50,6 @@ export class LeaveBalanceService {
    * @returns {Observable<CreateLeaveBalanceResponse>} Observable containing the created leave balance confirmation
    *
    * @throws {HttpError} HTTP error if creation fails, employee is not found, or unauthorized access
-   *
-   * @example
-   * ```typescript
-   * // Create initial vacation balance for new employee
-   * this.leaveBalanceService.createLeaveBalance('emp-123', 'VACATION', 20).subscribe({
-   *   next: (response) => {
-   *     console.log('Leave balance created:', response);
-   *     this.refreshLeaveBalances();
-   *   },
-   *   error: (error) => console.error('Failed to create leave balance:', error)
-   * });
-   *
-   * // Annual leave allocation update
-   * this.leaveBalanceService.createLeaveBalance('emp-123', 'SICK', 12).subscribe({
-   *   next: (response) => this.showSuccess('Annual sick leave allocated successfully')
-   * });
-   * ```
    */
   createLeaveBalance(
     employeeId: string,
@@ -95,19 +70,6 @@ export class LeaveBalanceService {
    * @returns {Observable<NewLeaveBalance[]>} Observable array of leave balance objects for all leave types
    *
    * @throws {HttpError} HTTP error if the request fails, user is not found, or unauthorized access
-   *
-   * @example
-   * ```typescript
-   * this.leaveBalanceService.getLeaveBalanceFromBackend().subscribe({
-   *   next: (balances) => {
-   *     this.leaveBalances = balances;
-   *     this.sickLeaveBalance = this.getNewSickLeaveBalance(balances);
-   *     this.vacationLeaveBalance = this.getNewVacationLeaveBalance(balances);
-   *     this.personalLeaveBalance = this.getNewPersonalLeaveBalance(balances);
-   *   },
-   *   error: (error) => console.error('Failed to load leave balances:', error)
-   * });
-   * ```
    */
   getLeaveBalanceFromBackend(): Observable<NewLeaveBalance[]> {
     const uuid = this.getUuid();
@@ -126,18 +88,6 @@ export class LeaveBalanceService {
    * @param {NewLeaveBalance[]} newLeaveBalance - Array of leave balance objects from the backend
    *
    * @returns {number} Current sick leave balance in days, returns 0 if not found
-   *
-   * @example
-   * ```typescript
-   * const balances = await this.getLeaveBalanceFromBackend().toPromise();
-   * const sickDays = this.leaveBalanceService.getNewSickLeaveBalance(balances);
-   * console.log(`Available sick days: ${sickDays}`);
-   *
-   * // Use in leave request validation
-   * if (requestedSickDays > this.getNewSickLeaveBalance(this.leaveBalances)) {
-   *   this.showError('Insufficient sick leave balance');
-   * }
-   * ```
    */
   getNewSickLeaveBalance(newLeaveBalance: NewLeaveBalance[]): number {
     const sickLeave = newLeaveBalance.find(
@@ -156,20 +106,6 @@ export class LeaveBalanceService {
    * @param {NewLeaveBalance[]} leaveBalance - Array of leave balance objects from the backend
    *
    * @returns {number} Current vacation leave balance in days, returns 0 if not found
-   *
-   * @example
-   * ```typescript
-   * const balances = await this.getLeaveBalanceFromBackend().toPromise();
-   * const vacationDays = this.leaveBalanceService.getNewVacationLeaveBalance(balances);
-   *
-   * // Display in UI
-   * this.vacationBalanceDisplay = `${vacationDays} days available`;
-   *
-   * // Validate vacation request
-   * if (requestedVacationDays <= vacationDays) {
-   *   this.processVacationRequest();
-   * }
-   * ```
    */
   getNewVacationLeaveBalance(leaveBalance: NewLeaveBalance[]): number {
     const vacationLeave = leaveBalance.find(
@@ -188,22 +124,6 @@ export class LeaveBalanceService {
    * @param {NewLeaveBalance[]} leaveBalance - Array of leave balance objects from the backend
    *
    * @returns {number} Current personal leave balance in days, returns 0 if not found
-   *
-   * @example
-   * ```typescript
-   * const balances = await this.getLeaveBalanceFromBackend().toPromise();
-   * const personalDays = this.leaveBalanceService.getNewPersonalLeaveBalance(balances);
-   *
-   * // Personal leave request validation
-   * if (this.personalLeaveRequest.days <= personalDays) {
-   *   this.submitPersonalLeaveRequest();
-   * } else {
-   *   this.showError(`Only ${personalDays} personal days available`);
-   * }
-   *
-   * // Dashboard display
-   * this.personalLeaveCard.balance = `${personalDays} days`;
-   * ```
    */
   getNewPersonalLeaveBalance(leaveBalance: NewLeaveBalance[]): number {
     const personalBalance = leaveBalance.find(

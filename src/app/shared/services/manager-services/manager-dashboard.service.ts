@@ -26,14 +26,6 @@ export class ManagerDashboardService {
    * @returns {string} The manager's UUID if authenticated, empty string if not authenticated or on error
    *
    * @throws {Alert} Shows alert dialog if manager is not logged in when parsing fails
-   *
-   * @example
-   * ```typescript
-   * const managerId = this.managerDashboardService.getUuid();
-   * if (managerId) {
-   *   // Manager is authenticated, proceed with dashboard operations
-   * }
-   * ```
    */
   getUuid(): string {
     const loggedInUser = localStorage.getItem('auth');
@@ -57,17 +49,6 @@ export class ManagerDashboardService {
    * @returns {Observable<EmployeeName>} Observable containing the manager's name details (firstName, lastName)
    *
    * @throws {HttpError} HTTP error if the request fails or manager is not found
-   *
-   * @example
-   * ```typescript
-   * this.managerDashboardService.getManagersName().subscribe({
-   *   next: (name) => {
-   *     this.managerDisplayName = `${name.firstName} ${name.lastName}`;
-   *     this.welcomeMessage = `Welcome back, ${name.firstName}!`;
-   *   },
-   *   error: (error) => console.error('Failed to load manager name:', error)
-   * });
-   * ```
    */
   public getManagersName(): Observable<EmployeeName> {
     const uuid = this.getUuid();
@@ -86,18 +67,6 @@ export class ManagerDashboardService {
    * @returns {Observable<number>} Observable containing the team size count, returns 0 if manager is not authenticated
    *
    * @throws {HttpError} HTTP error if the request fails or team information is not accessible
-   *
-   * @example
-   * ```typescript
-   * this.managerDashboardService.getTeamSize().subscribe({
-   *   next: (size) => {
-   *     this.teamSize = size;
-   *     this.teamSizeMetric = `${size} Team Members`;
-   *     this.updateDashboardMetrics();
-   *   },
-   *   error: (error) => console.error('Failed to load team size:', error)
-   * });
-   * ```
    */
   public getTeamSize(): Observable<number> {
     const uuid = this.getUuid();
@@ -123,18 +92,6 @@ export class ManagerDashboardService {
    *
    * @throws {HttpError} HTTP error if the request fails or data is not accessible
    *
-   * @example
-   * ```typescript
-   * this.managerDashboardService.getTeamLeaveStats().subscribe({
-   *   next: (stats) => {
-   *     this.pendingLeaveRequests = stats.pendingCount;
-   *     this.approvedThisMonth = stats.approvedThisMonth;
-   *     this.totalLeaveRequestsThisYear = stats.totalThisYear;
-   *     this.updateLeaveMetrics(stats);
-   *   },
-   *   error: (error) => console.error('Failed to load leave statistics:', error)
-   * });
-   * ```
    */
   public getTeamLeaveStats(): Observable<ManagerLeaveRequestData> {
     const uuid = this.getUuid();
@@ -157,18 +114,6 @@ export class ManagerDashboardService {
    * @returns {Observable<ManagerLeaveRequestDashboard[]>} Observable array of recent leave requests, returns empty array if manager is not authenticated
    *
    * @throws {HttpError} HTTP error if the request fails or leave request data is not accessible
-   *
-   * @example
-   * ```typescript
-   * this.managerDashboardService.getTeamLeaveRequests().subscribe({
-   *   next: (requests) => {
-   *     this.recentLeaveRequests = requests.slice(0, 10); // Show latest 10
-   *     this.pendingRequests = requests.filter(r => r.status === 'PENDING');
-   *     this.updateRecentActivity(requests);
-   *   },
-   *   error: (error) => console.error('Failed to load team leave requests:', error)
-   * });
-   * ```
    */
   public getTeamLeaveRequests(): Observable<ManagerLeaveRequestDashboard[]> {
     const uuid = this.getUuid();

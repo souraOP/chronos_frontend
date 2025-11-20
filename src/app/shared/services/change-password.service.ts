@@ -29,48 +29,6 @@ export class ChangePasswordService {
    * @returns {Observable<ChangePasswordResponseDTO>} Observable containing password change confirmation and user details
    *
    * @throws {HttpError} HTTP error if password change fails due to validation errors, security requirements, or server issues
-   *
-   * @example
-   * ```typescript
-   * const passwordChangeData: ChangePasswordDTO = {
-   *   newPassword: 'NewSecurePassword123!',
-   *   confirmPassword: 'NewSecurePassword123!'
-   * };
-   *
-   * const userEmail = 'user@company.com';
-   *
-   * this.changePasswordService.changePassword(userEmail, passwordChangeData).subscribe({
-   *   next: (response) => {
-   *     this.showSuccess('Password changed successfully!');
-   *     console.log('Password changed for:', response.email);
-   *     this.router.navigate(['/login']);
-   *   },
-   *   error: (error) => {
-   *     if (error.status === 400) {
-   *       this.showError('Password validation failed: ' + error.error.message);
-   *     } else if (error.status === 401) {
-   *       this.showError('Current password is incorrect');
-   *     } else if (error.status === 422) {
-   *       this.showError('New password does not meet security requirements');
-   *     } else {
-   *       this.showError('Failed to change password. Please try again.');
-   *     }
-   *   }
-   * });
-   *
-   * // Password validation in component
-   * validatePasswordChange(formData: ChangePasswordDTO): boolean {
-   *   if (formData.newPassword !== formData.confirmPassword) {
-   *     this.showError('Passwords do not match');
-   *     return false;
-   *   }
-   *   if (formData.newPassword.length < 8) {
-   *     this.showError('Password must be at least 8 characters long');
-   *     return false;
-   *   }
-   *   return true;
-   * }
-   * ```
    */
   changePassword(
     email: string,

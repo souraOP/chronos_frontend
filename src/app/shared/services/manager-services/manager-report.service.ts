@@ -21,14 +21,6 @@ export class ManagerReportService {
    * @returns {string} The manager's UUID if authenticated, empty string if not authenticated or on error
    *
    * @throws {Alert} Shows alert dialog if manager is not logged in when parsing fails
-   *
-   * @example
-   * ```typescript
-   * const managerId = this.managerReportService.getUuid();
-   * if (managerId) {
-   *   // Manager is authenticated, proceed with report operations
-   * }
-   * ```
    */
   getUuid(): string {
     const loggedInUser = localStorage.getItem('auth');
@@ -61,36 +53,6 @@ export class ManagerReportService {
    * @returns {Observable<ReportResponse>} Observable containing the generated report data and metadata
    *
    * @throws {HttpError} HTTP error if report generation fails, invalid parameters, or unauthorized access
-   *
-   * @example
-   * ```typescript
-   * const reportRequest: GenerateReportRequest = {
-   *   reportType: 'attendance_summary',
-   *   startDate: new Date('2024-01-01'),
-   *   endDate: new Date('2024-01-31'),
-   *   employeeIds: ['emp-1', 'emp-2'],
-   *   format: 'PDF',
-   *   filters: {
-   *     includeLeaveData: true,
-   *     groupByDepartment: true
-   *   }
-   * };
-   *
-   * this.managerReportService.generateReportByManager(reportRequest).subscribe({
-   *   next: (report) => {
-   *     this.generatedReport = report;
-   *     this.downloadReport(report.downloadUrl);
-   *     this.showSuccess('Report generated successfully!');
-   *   },
-   *   error: (error) => {
-   *     if (error.status === 400) {
-   *       this.showError('Invalid report parameters: ' + error.error.message);
-   *     } else {
-   *       this.showError('Failed to generate report');
-   *     }
-   *   }
-   * });
-   * ```
    */
   generateReportByManager(
     payload: GenerateReportRequest
@@ -112,30 +74,6 @@ export class ManagerReportService {
    * @returns {Observable<ReportResponse[]>} Observable array of recent team reports with metadata
    *
    * @throws {HttpError} HTTP error if the request fails, reports are not accessible, or unauthorized access
-   *
-   * @example
-   * ```typescript
-   * this.managerReportService.fetchTeamReport().subscribe({
-   *   next: (reports) => {
-   *     this.recentReports = reports;
-   *     this.totalReportsGenerated = reports.length;
-   *     this.latestReport = reports[0]; // Most recent report
-   *
-   *     // Categorize reports by type
-   *     this.attendanceReports = reports.filter(r => r.reportType === 'attendance');
-   *     this.leaveReports = reports.filter(r => r.reportType === 'leave');
-   *     this.performanceReports = reports.filter(r => r.reportType === 'performance');
-   *   },
-   *   error: (error) => console.error('Failed to load team reports:', error)
-   * });
-   *
-   * // Usage in template for report history table
-   * // <tr *ngFor="let report of recentReports">
-   * //   <td>{{ report.reportName }}</td>
-   * //   <td>{{ report.generatedDate | date }}</td>
-   * //   <td><a [href]="report.downloadUrl">Download</a></td>
-   * // </tr>
-   * ```
    */
   fetchTeamReport(): Observable<ReportResponse[]> {
     const managerId = this.getUuid();

@@ -22,14 +22,6 @@ export class ShiftSwapEmployeeService {
    * @returns {string} The employee's UUID if authenticated, empty string if not authenticated or on error
    *
    * @throws {Alert} Shows alert dialog if employee is not logged in when parsing fails
-   *
-   * @example
-   * ```typescript
-   * const employeeId = this.shiftSwapEmployeeService.getUuid();
-   * if (employeeId) {
-   *   // Employee is authenticated, proceed with shift swap operations
-   * }
-   * ```
    */
   getUuid(): string {
     const loggedInUser = localStorage.getItem('auth');
@@ -53,19 +45,6 @@ export class ShiftSwapEmployeeService {
    * @returns {Observable<ShiftSwapRequestForEmployee[]>} Observable array of shift swap requests, or empty array if employee is not authenticated
    *
    * @throws {HttpError} HTTP error if the request fails or unauthorized access
-   *
-   * @example
-   * ```typescript
-   * this.shiftSwapEmployeeService.loadShiftSwapRequests().subscribe({
-   *   next: (swapRequests) => {
-   *     this.activeSwapRequests = swapRequests.filter(r => r.status === 'PENDING');
-   *     this.completedSwapRequests = swapRequests.filter(r => r.status === 'APPROVED' || r.status === 'REJECTED');
-   *     this.outgoingRequests = swapRequests.filter(r => r.requesterId === this.currentEmployeeId);
-   *     this.incomingRequests = swapRequests.filter(r => r.targetEmployeeId === this.currentEmployeeId);
-   *   },
-   *   error: (error) => console.error('Failed to load shift swap requests:', error)
-   * });
-   * ```
    */
   loadShiftSwapRequests(): Observable<ShiftSwapRequestForEmployee[]> {
     const uuid = this.getUuid();

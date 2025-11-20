@@ -21,14 +21,6 @@ export class EmployeeDashboardService {
    * @returns {string} The employee's UUID if authenticated, empty string if not authenticated or on error
    *
    * @throws {Alert} Shows alert dialog if employee is not logged in when parsing fails
-   *
-   * @example
-   * ```typescript
-   * const employeeId = this.employeeDashboardService.getUuid();
-   * if (employeeId) {
-   *   // Employee is authenticated, proceed with operations
-   * }
-   * ```
    */
   getUuid(): string {
     const loggedInUser = localStorage.getItem('auth');
@@ -52,18 +44,8 @@ export class EmployeeDashboardService {
    * @returns {Observable<EmployeeName>} Observable containing the employee's name details (firstName, lastName)
    *
    * @throws {HttpError} HTTP error if the request fails or employee is not found
-   *
-   * @example
-   * ```typescript
-   * this.employeeDashboardService.getEmployeeName().subscribe({
-   *   next: (name) => {
-   *     this.employeeName = `${name.firstName} ${name.lastName}`;
-   *   },
-   *   error: (error) => console.error('Failed to load employee name:', error)
-   * });
-   * ```
    */
-  getEmployeeName() {
+  getEmployeeName(): Observable<EmployeeName> {
     const uuid = this.getUuid();
     const url = `${this.employeeEndpoint}/${uuid}/name`;
     return this.http.get<EmployeeName>(url);
@@ -79,16 +61,6 @@ export class EmployeeDashboardService {
    * @returns {Observable<EmployeeLeaveRequestDashboard[]>} Observable array of recent leave request summaries
    *
    * @throws {HttpError} HTTP error if the request fails or employee is not authenticated
-   *
-   * @example
-   * ```typescript
-   * this.employeeDashboardService.getLeaveRequests().subscribe({
-   *   next: (requests) => {
-   *     this.recentLeaveRequests = requests.slice(0, 5); // Show latest 5
-   *   },
-   *   error: (error) => console.error('Failed to load leave requests:', error)
-   * });
-   * ```
    */
   getLeaveRequests(): Observable<EmployeeLeaveRequestDashboard[]> {
     const uuid = this.getUuid();

@@ -21,14 +21,6 @@ export class EmployeeAttendanceService {
    *
    * @throws {Alert} Shows alert dialog if employee is not logged in when parsing fails
    * @throws {Console.error} Logs unauthorized access attempts
-   *
-   * @example
-   * ```typescript
-   * const employeeId = this.employeeAttendanceService.getUuid();
-   * if (employeeId) {
-   *   // Employee is authenticated, proceed with attendance operations
-   * }
-   * ```
    */
   getUuid(): string {
     const loggedInUser = localStorage.getItem('auth');
@@ -55,51 +47,11 @@ export class EmployeeAttendanceService {
    * @returns {Observable<AttendanceHistoryForEmployee[]>} Observable array of historical attendance records
    *
    * @throws {HttpError} HTTP error if the request fails, employee is not found, or unauthorized access
-   *
-   * @example
-   * ```typescript
-   * this.employeeAttendanceService.getHistoryForEmployee().subscribe({
-   *   next: (history) => {
-   *     this.attendanceHistory = history.sort((a, b) =>
-   *       new Date(b.date).getTime() - new Date(a.date).getTime()
-   *     );
-   *   },
-   *   error: (error) => console.error('Failed to load attendance history:', error)
-   * });
-   * ```
    */
   public getHistoryForEmployee(): Observable<AttendanceHistoryForEmployee[]> {
     const empUuid = this.getUuid();
     const url = `${this.attendanceEndpoint}/${empUuid}/history`;
     return this.http.get<AttendanceHistoryForEmployee[]>(url);
-  }
-
-  /**
-   * Fetches the most recent attendance record for the authenticated employee
-   *
-   * @description Retrieves the latest attendance entry to determine current status (checked in/out),
-   * last check-in time, and current work session information. This method is essential for
-   * displaying real-time attendance status and enabling appropriate check-in/check-out actions.
-   *
-   * @returns {Observable<AttendanceHistoryForEmployee>} Observable containing the latest attendance record
-   *
-   * @throws {HttpError} HTTP error if no recent attendance found, employee not found, or unauthorized access
-   *
-   * @example
-   * ```typescript
-   * this.employeeAttendanceService.getLatestForEmployee().subscribe({
-   *   next: (latest) => {
-   *     this.isCheckedIn = latest.status === 'ACTIVE';
-   *     this.lastCheckInTime = latest.checkInTime;
-   *   },
-   *   error: (error) => console.error('No recent attendance found:', error)
-   * });
-   * ```
-   */
-  public getLatestForEmployee(): Observable<AttendanceHistoryForEmployee> {
-    const empUuid = this.getUuid();
-    const url = `${this.attendanceEndpoint}/${empUuid}/latest`;
-    return this.http.get<AttendanceHistoryForEmployee>(url);
   }
 
   /**
@@ -114,23 +66,6 @@ export class EmployeeAttendanceService {
    * @returns {Observable<AttendanceHistoryForEmployee>} Observable containing the newly created attendance record
    *
    * @throws {HttpError} HTTP error if employee is already checked in, validation fails, or unauthorized access
-   *
-   * @example
-   * ```typescript
-   * // Check-in at office
-   * this.employeeAttendanceService.checkIn('Office - Building A').subscribe({
-   *   next: (record) => {
-   *     this.currentSession = record;
-   *     this.showSuccess('Checked in successfully!');
-   *   },
-   *   error: (error) => this.showError('Check-in failed: ' + error.message)
-   * });
-   *
-   * // Check-in without location
-   * this.employeeAttendanceService.checkIn().subscribe({
-   *   next: (record) => console.log('Checked in at:', record.checkInTime)
-   * });
-   * ```
    */
   public checkIn(location?: string): Observable<AttendanceHistoryForEmployee> {
     const empUuid = this.getUuid();
@@ -149,24 +84,6 @@ export class EmployeeAttendanceService {
    * @returns {Observable<AttendanceHistoryForEmployee>} Observable containing the completed attendance record with calculated duration
    *
    * @throws {HttpError} HTTP error if employee is not checked in, validation fails, or unauthorized access
-   *
-   * @example
-   * ```typescript
-   * this.employeeAttendanceService.checkOut().subscribe({
-   *   next: (record) => {
-   *     this.completedSession = record;
-   *     this.totalHoursWorked = record.hoursWorked;
-   *     this.showSuccess(`Checked out! Total hours: ${record.hoursWorked}`);
-   *   },
-   *   error: (error) => {
-   *     if (error.status === 400) {
-   *       this.showError('You are not currently checked in');
-   *     } else {
-   *       this.showError('Check-out failed: ' + error.message);
-   *     }
-   *   }
-   * });
-   * ```
    */
   public checkOut(): Observable<AttendanceHistoryForEmployee> {
     const empUuid = this.getUuid();
