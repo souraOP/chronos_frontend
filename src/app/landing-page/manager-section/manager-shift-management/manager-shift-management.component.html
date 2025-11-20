@@ -1,0 +1,257 @@
+<main class="overflow-y-auto">
+  <header class="p-[33px] flex items-center justify-between border-b">
+    <p class="text-sm text-gray-800">Chronos - Manager's Shift Management</p>
+  </header>
+  <div class="p-6 lg:pr-40">
+    <div class="flex items-center justify-between mb-[58px]">
+      <div>
+        <h1 class="text-3xl font-bold">My Shifts</h1>
+        <p class="mt-5">View your scheduled shifts and swap requests</p>
+      </div>
+      <div class="font-semibold">
+        <input
+          type="date"
+          class="border border-[#565656] p-2 rounded-lg shadow-xl bg-white"
+          placeholder="Pick a date"
+          id="pick-date"
+          name="pick_shift_date"
+          [(ngModel)]="managerShiftDate"
+          (change)="onChangeDateGetShifts()"
+        />
+      </div>
+      <button
+        (click)="openModal()"
+        class="bg-black p-3 text-white rounded-full hover:bg-gray-600 shadow-xl"
+      >
+        Create Shift
+      </button>
+    </div>
+
+    <div class="mb-5">
+      <p class="font-bold text-xl">Total Team Size: {{ fullTeamSize }}</p>
+    </div>
+
+    <div class="grid grid-cols-1">
+      <app-teams-shift-overview
+        [getShiftDate]="managerShiftDate"
+      ></app-teams-shift-overview>
+      <app-teams-shift-swap-requests></app-teams-shift-swap-requests>
+    </div>
+  </div>
+
+  @if(isModalOpen()){
+  <div
+    (click)="closeModal()"
+    class="fixed z-40 inset-0 bg-black opacity-100 backdrop-blur-2xl flex items-center justify-center"
+  >
+    <div
+      class="bg-white w-full border p-6 max-w-lg rounded-xl m-4 shadow-lg"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="flex justify-between items-center pb-4 border-b">
+        <div>
+          <h2 class="text-xl font-semibold">Create New Shift</h2>
+          <p class="text-sm mt-1 text-gray-500">
+            Assign a new shift to a employee
+          </p>
+        </div>
+        <button
+          (click)="closeModal()"
+          class="p-1 rounded-full hover:bg-gray-300 bg-blue-300 text-2xl"
+        >
+          &times;
+        </button>
+      </div>
+
+      <div class="py-6">
+        <form
+          class="space-y-6"
+          (ngSubmit)="createShiftForEmployee($event)"
+          [formGroup]="shiftForm"
+        >
+          <div>
+            <label
+              for="employee-name"
+              class="block mb-3 text-gray-700 font-bold"
+              >Team Member</label
+            >
+            <select
+              id="employee-name"
+              name="employee_uuid"
+              required
+              formControlName="employee_uuid"
+              class="w-full px-4 py-2 border border-[#D5CFCF] rounded-lg shadow-sm focus:outline-none focus:border-blue-500 text-sm focus:ring-blue-500"
+            >
+              <option value="" disabled selected>--Choose an employee--</option>
+              @for(eachMember of teamEmployeesCreateShiftForm; track
+              eachMember.id){
+              <option [value]="eachMember.id">
+                {{ eachMember?.firstName }} {{ eachMember?.lastName }}
+              </option>
+              }
+            </select>
+            <div
+              *ngIf="
+                shiftForm.get('employee_uuid')?.touched &&
+                shiftForm.get('employee_uuid')?.invalid
+              "
+              class="text-red-500 text-xs mt-1"
+            >
+              Please select an employee
+            </div>
+          </div>
+          <div>
+            <label for="shift-date" class="block mb-3 text-gray-700 font-bold"
+              >Date</label
+            >
+            <input
+              id="shift-date"
+              name="shift_date"
+              type="date"
+              [min]="today"
+              formControlName="shift_date"
+              required
+              class="w-full px-3 py-2 border border-[#D5CFCF] rounded-lg shadow-sm focus:outline-none focus:border-blue-500 text-sm focus:ring-blue-500"
+            />
+            <div
+              *ngIf="
+                shiftForm.get('shift_date')?.touched &&
+                shiftForm.get('shift_date')?.invalid
+              "
+              class="text-red-500 text-xs"
+            >
+              Please select a date.
+            </div>
+          </div>
+
+          <div>
+            <label for="shift-type" class="block mb-3 text-gray-700 font-bold"
+              >Shift Type</label
+            >
+            <select
+              id="shift-type"
+              name="shift_type"
+              required
+              formControlName="shift_type"
+              class="w-full px-4 py-2 border border-[#D5CFCF] rounded-lg shadow-sm focus:outline-none focus:border-blue-500 text-sm focus:ring-blue-500"
+            >
+              <option value="" disabled selected>
+                --Select the type of shift--
+              </option>
+              <option value="REGULAR">Regular</option>
+              <option value="LATE">Late</option>
+              <option value="EARLY">Early</option>
+              <option value="NIGHT">Night</option>
+              <option value="REMOTE">Remote</option>
+            </select>
+            <div
+              *ngIf="
+                shiftForm.get('shift_type')?.touched &&
+                shiftForm.get('shift_type')?.invalid
+              "
+              class="text-red-500 text-xs"
+            >
+              Please select a shift type
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <label
+                for="shift-start-time"
+                class="font-bold mb-3 text-gray-700 mr-2"
+              >
+                Start Time
+              </label>
+              <input
+                id="shift-start-time"
+                formControlName="shift_start_time"
+                type="time"
+                name="shift_start_time"
+                class="border rounded-lg shadow-sm border-[#D5CFCF] px-4 py-2"
+                required
+              />
+
+              <div
+                *ngIf="
+                  shiftForm.get('shift_start_time')?.touched &&
+                  shiftForm.get('shift_start_time')?.invalid
+                "
+                class="text-red-500 text-xs"
+              >
+                Please select a start time
+              </div>
+            </div>
+
+            <div>
+              <label
+                for="shift-end-time"
+                class="font-bold mb-3 text-gray-700 mr-2"
+              >
+                End Time
+              </label>
+              <input
+                id="shift-end-time"
+                formControlName="shift_end_time"
+                type="time"
+                name="shift_end_time"
+                class="border rounded-lg shadow-sm border-[#D5CFCF] px-4 py-2"
+                required
+              />
+
+              <div
+                *ngIf="
+                  shiftForm.get('shift_end_time')?.touched &&
+                  shiftForm.get('shift_end_time')?.invalid
+                "
+                class="text-red-500 text-xs"
+              >
+                Please select an end time
+              </div>
+            </div>
+          </div>
+
+          <label for="location" class="block mb-3 text-gray-700 font-bold"
+            >Location</label
+          >
+          <input
+            type="text"
+            id="location"
+            formControlName="location"
+            placeholder="Provide a location"
+            class="w-full border border-[#D5CFCF] px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-xs"
+          />
+
+          <div *ngIf="shiftForm.get('location')?.touched && shiftForm.get('location')?.errors" class="text-red-500 text-xs">
+            <div *ngIf="shiftForm.get('location')?.errors?.['required']">
+              Please provide a location
+            </div>
+            <div *ngIf="shiftForm.get('location')?.errors?.['onlyNumbers']">
+              Location cannot be only numbers
+            </div>
+            <div *ngIf="shiftForm.get('location')?.errors?.['onlyAlphanumeric']">
+              Add spaces or punctuation; not just letters/numbers.
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end-safe pt-5 space-x-6 mt-8">
+            <button
+              (click)="closeModal()"
+              class="bg-white px-4 py-2 font-semibold border border-[#D5CFCF] rounded-full hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              [disabled]="shiftForm.invalid"
+              class="shadow-xl font-medium text-sm px-4 py-2 rounded-full bg-black text-white transition-colors hover:bg-green-700 ease-in-out"
+            >
+              Create Shift
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  }
+</main>

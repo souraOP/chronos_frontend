@@ -1,0 +1,41 @@
+<main class="overflow-y-auto">
+  <header class="p-[33px] flex items-center justify-between border-b">
+    <h1 class="text-sm text-gray-800">Chronos - Dashboard</h1>
+  </header>
+  <div class="p-6 lg:pr-40">
+    <div class="flex items-center justify-between mb-[58px]">
+      <div>
+        <h2 class="text-3xl font-bold">
+          Welcome back,
+          <span class="text-blue-700"
+            >{{ employeeName?.firstName }} {{ employeeName?.lastName }}</span
+          >
+        </h2>
+        <p class="mt-5">Here's your attendance overview</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+      <div class="bg-white border rounded-xl p-6 border-[#D5CFCF] shadow-lg">
+        Sick Balance
+        <p class="font-bold mt-10 text-3xl">{{ getSickLeaveBalance() }}</p>
+        <p class="mt-1 text-sm text-gray-500">Days remaining</p>
+      </div>
+      <div class="bg-white border rounded-xl p-6 border-[#D5CFCF] shadow-lg">
+        Vacation Balance
+        <p class="font-bold mt-10 text-3xl">{{ getVacationLeaveBalance() }}</p>
+        <p class="mt-1 text-sm text-gray-500">Days remaining</p>
+      </div>
+      <div class="bg-white border rounded-xl p-6 border-[#D5CFCF] shadow-lg">
+        Personal Balance
+        <p class="font-bold mt-10 text-3xl">{{ getPersonalLeaveBalance() }}</p>
+        <p class="mt-1 text-sm text-gray-500">Days remaining</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <app-upcoming-shifts-section />
+      <app-recent-leave-requests-section />
+    </div>
+  </div>
+</main>

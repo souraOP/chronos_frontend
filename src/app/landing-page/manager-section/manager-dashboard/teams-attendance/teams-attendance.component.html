@@ -1,0 +1,40 @@
+<div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-lg">
+  <h3 class="font-bold text-gray-900 tracking-tight">
+    Today's Team Attendance
+  </h3>
+  <p class="mt-1 text-sm text-gray-500">
+    Current attendance status of all team members
+  </p>
+
+  <div class="mt-5 space-y-3">
+    @for(eachEmployee of teamAttendanceRow | slice:0:5; track eachEmployee.displayEmployeeId){
+    <div
+      class="flex items-center justify-between p-3.5 bg-white border border-gray-300 rounded-xl hover:shadow-md transition duration-300"
+    >
+      <div class="flex-grow min-w-0">
+        <p class="font-semibold text-gray-800 truncate">
+          {{ eachEmployee.employeeName }}
+        </p>
+        <p class="text-xs text-gray-500 mt-0.5">
+          {{ eachEmployee.checkIn | date : "shortTime" }} -
+          {{ eachEmployee.checkOut | date : "shortTime" }}
+        </p>
+      </div>
+
+      @if (eachEmployee.attendanceStatus === 'ACTIVE') {
+      <span
+        class="ml-3 flex-shrink-0 text-sm font-semibold px-3 py-1.5 rounded-full bg-green-100 text-green-800"
+      >
+        {{ eachEmployee.attendanceStatus | titlecase }}
+      </span>
+      } @else {
+      <span
+        class="ml-3 flex-shrink-0 text-sm font-semibold px-3 py-1.5 rounded-full bg-gray-100 text-gray-700"
+      >
+        {{ eachEmployee.attendanceStatus | titlecase }}
+      </span>
+      }
+    </div>
+    }
+  </div>
+</div>

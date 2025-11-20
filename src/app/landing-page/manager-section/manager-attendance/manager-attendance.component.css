@@ -1,0 +1,13 @@
+
+
+
+.attendance-table table {
+  
+  margin-top: 20px;
+}
+
+.attendance-table th, .attendance-table td {
+  
+  padding: 8px;
+  text-align: left;
+}

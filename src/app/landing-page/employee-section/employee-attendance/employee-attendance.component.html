@@ -1,0 +1,77 @@
+<div class="">
+  <header class="p-[33px] flex items-center justify-between border-b">
+    <h1 class="text-sm text-gray-800">Chronos - Attendance Management</h1>
+  </header>
+
+  <div class="p-6 lg:pr-40">
+    <div class="tracking p-4 mb-6">
+      <h3 class="text-xl font-bold mb-2">Attendance Tracking</h3>
+      <p><strong>Date:</strong> {{ todayDate }}</p>
+      <p><strong>Status:</strong> {{ currentStatus ? (currentStatus | titlecase) : '--' }}</p>
+      <p><strong>Check-In Time:</strong> {{ checkInTime || "--" }}</p>
+      <p><strong>Check-Out Time:</strong> {{ checkOutTime || "--" }}</p>
+      <p><strong>Location:</strong> Coimbatore Office</p>
+      <p>
+        <strong>Hours Worked:</strong>
+        {{ hoursWorked || 0 | number : "1.2-2" }}h
+      </p>
+
+      <button
+        class="bg-green-500 text-white px-4 py-2 rounded mt-4 hover:bg-green-800 transition-colors"
+        (click)="handleClockAction()"
+        [disabled]="actionLoading"
+      >
+        {{ isClockedIn ? "Clock Out" : "Clock In" }}
+      </button>
+    </div>
+
+    <div class="border rounded shadow bg-white p-5">
+      <h3 class="text-lg font-semibold mb-4">Attendance History</h3>
+      <table class="min-w-full border-collapse border border-gray-300">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="border px-3 py-2">Date</th>
+            <th class="border px-3 py-2">Check-In</th>
+            <th class="border px-3 py-2">Check-Out</th>
+            <th class="border px-3 py-2">Hoursworked</th>
+            <th class="border px-3 py-2">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (record of history; track record.attendanceId) {
+          <tr>
+            <td class="border px-3 py-2">{{ record.date | date }}</td>
+            <td class="border px-3 py-2">
+              {{
+                record.checkIn ? (record.checkIn | date : "mediumTime") : "--"
+              }}
+            </td>
+            <td class="border px-3 py-2">
+              {{
+                record.checkOut ? (record.checkOut | date : "mediumTime") : "--"
+              }}
+            </td>
+            <td class="border px-3 py-2">
+              {{
+                record.hoursWorked != null
+                  ? record.hoursWorked.toFixed(2)
+                  : "0.00"
+              }}
+            </td>
+            <td class="border px-3 py-2">
+              <span
+                [ngClass]="{
+                  'text-green-600 font-bold': record.attendanceStatus === 'COMPLETE',
+                  'text-yellow-600 font-bold': record.attendanceStatus === 'ACTIVE',
+                }"
+              >
+                {{ record.attendanceStatus | titlecase }}
+              </span>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

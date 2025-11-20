@@ -1,0 +1,70 @@
+<aside
+  class="rounded-r-2xl w-64 flex flex-col h-screen flex-shrink-0 border-r bg-[#e7e0e0] z-40 transition-transform duration-300 md:translate-x-0 fixed md:static top-0 left-0"
+>
+  <div class="border-b p-3 relative">
+    <div class="flex items-center">
+      <div
+        class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center border border-[#a2a2a2]"
+      >
+        <img src="user-icon.svg" alt="Employee Profile Picture" class="h-8" />
+      </div>
+      <div class="ml-4">
+        <p
+          class="text-xs font-semibold bg-blue-200 shadow-sm mb-1 py-0.5 text-center rounded-full border border-[#7e7777]"
+        >
+          {{ eachEmployee()?.role }}
+        </p>
+        <p class="font-semibold text-sm">{{ eachEmployee()?.employeeId }}</p>
+        <p class="text-xs text-gray-500">{{ eachEmployee()?.email }}</p>
+      </div>
+    </div>
+  </div>
+
+  <nav class="flex-grow px-4 py-6">
+    <ul>
+      @for(link of navItems; track link.id){
+      <li>
+        <a
+          [routerLink]="[
+            '/',
+            'employee-section',
+            eachEmployee()?.uuid,
+            link.id
+          ]"
+          class="flex items-center px-4 py-2.5 cursor-pointer"
+          routerLinkActive="bg-green-50 border font-semibold rounded-full border-[#D5CFCF] shadow-lg"
+          [routerLinkActiveOptions]="{ exact: true }"
+          ><span class="ml-3 text-sm">{{ link.name }}</span></a
+        >
+      </li>
+      }
+    </ul>
+  </nav>
+
+  <div class="px-4 py-10">
+    <ul>
+      <li>
+        <a
+          routerLinkActive="bg-indigo-50 border border-[#D5CFCF] rounded-full"
+          class="py-2.5 flex items-center px-4 cursor-pointer"
+          [routerLink]="[
+            '/',
+            'employee-section',
+            eachEmployee()?.uuid,
+            'profile'
+          ]"
+        >
+          User Profile
+        </a>
+      </li>
+      <li>
+        <a
+          class="flex items-center px-4 py-2.5 my-1 cursor-pointer bg-gray-50 rounded-full"
+          (click)="onLogout()"
+        >
+          <span class="ml-3 text-red-700">Logout</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>

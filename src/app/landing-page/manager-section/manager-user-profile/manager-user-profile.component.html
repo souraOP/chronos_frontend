@@ -1,0 +1,199 @@
+<main class="min-h-screen">
+  <header class="top-0 z-10 border-b p-[9px]">
+    <div class="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
+      <h1 class="text-sm text-gray-800">Chronos - Manager's Profile</h1>
+    </div>
+  </header>
+
+  <div class="max-w-6xl mx-auto px-6 py-8">
+    <div class="flex items-start justify-between mb-10">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">
+          <span class="text-yellow-500"
+            >{{ manager?.firstName }} {{ manager?.lastName }}'s
+          </span>
+          <span class="text-slate-900">profile</span>
+        </h2>
+        <p class="mt-3 text-slate-600">
+          View and edit your personal information
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <section class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-6">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6"
+          >
+            <div class="flex items-center gap-4">
+              <div
+                class="h-16 w-16 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white grid place-items-center text-xl font-bold shadow"
+              >
+                {{ manager?.firstName || "" | slice : 0 : 1
+                }}{{ manager?.lastName || "" | slice : 0 : 1 }}
+              </div>
+              <div>
+                <p class="text-2xl font-bold text-slate-900">
+                  {{ manager?.firstName }} {{ manager?.lastName }}
+                </p>
+                <p class="text-slate-500">{{ manager?.jobTitle }}</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full sm:w-auto">
+              <div class="rounded-xl border border-slate-200 px-4 py-3">
+                <p class="text-xs uppercase text-slate-500">Manager ID</p>
+                <p class="font-semibold text-slate-900">
+                  {{ manager?.displayEmployeeId }}
+                </p>
+              </div>
+              <div class="rounded-xl border border-slate-200 px-4 py-3">
+                <p class="text-xs uppercase text-slate-500">Department</p>
+                <p class="font-semibold text-slate-900">
+                  {{ manager?.departmentName }}
+                </p>
+              </div>
+              <div class="rounded-xl border border-slate-200 px-4 py-3">
+                <p class="text-xs uppercase text-slate-500">Gender</p>
+                <p class="font-semibold text-slate-900">
+                  {{ manager?.gender | titlecase }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-6">
+          <h3 class="text-lg font-semibold text-slate-900 mb-5">
+            Profile Information
+          </h3>
+
+          <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+            <div class="flex items-start justify-between sm:block">
+              <dt class="text-slate-500">Manager ID</dt>
+              <dd class="font-semibold text-slate-900">
+                {{ manager?.displayEmployeeId }}
+              </dd>
+            </div>
+
+            <div class="flex items-start justify-between sm:block">
+              <dt class="text-slate-500">Full Name</dt>
+              <dd class="font-semibold text-slate-900">
+                {{ manager?.firstName }} {{ manager?.lastName }}
+              </dd>
+            </div>
+
+            <div class="flex items-start justify-between sm:block">
+              <dt class="text-slate-500">Gender</dt>
+              <dd class="font-semibold text-slate-900">
+                {{ manager?.gender | titlecase }}
+              </dd>
+            </div>
+
+            <div class="flex items-start justify-between sm:block">
+              <dt class="text-slate-500">Department</dt>
+              <dd class="font-semibold text-slate-900">
+                {{ manager?.departmentName }}
+              </dd>
+            </div>
+
+            <div class="flex items-start justify-between sm:block">
+              <dt class="text-slate-500">Job Title</dt>
+              <dd class="font-semibold text-slate-900">
+                {{ manager?.jobTitle }}
+              </dd>
+            </div>
+
+            <div class="flex items-start justify-between sm:block">
+              <dt class="text-slate-500">Email</dt>
+              <dd class="font-semibold text-slate-900 break-all">
+                {{ manager?.email }}
+              </dd>
+            </div>
+
+            <div class="flex items-start justify-between sm:block">
+              <dt class="text-slate-500">Phone Number</dt>
+              <dd class="font-semibold text-slate-900">
+                {{ manager?.phoneNumber }}
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="space-y-6 shadow-l">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-6">
+          <h3 class="text-xl font-bold text-slate-900 text-center">
+            My Leave Balance
+          </h3>
+
+          <div class="mt-6 grid grid-cols-1 gap-4">
+            <div
+              class="rounded-xl shadow-sm border border-slate-200 p-4 flex items-center justify-between"
+            >
+              <div>
+                <p class="text-sm text-slate-500">Personal Leaves</p>
+                <p class="text-lg font-semibold text-slate-900">
+                  {{ getPersonalLeaveBalance() }} days remaining
+                </p>
+              </div>
+              <span
+                class="px-3 py-1 rounded-full text-xs border font-semibold bg-blue-50 text-blue-700"
+              >
+                Personal
+              </span>
+            </div>
+
+            <div
+              class="rounded-xl shadow-sm border border-slate-200 p-4 flex items-center justify-between"
+            >
+              <div>
+                <p class="text-sm text-slate-500">Sick Leaves</p>
+                <p class="text-lg font-semibold text-slate-900">
+                  {{ getSickLeaveBalance() }} days remaining
+                </p>
+              </div>
+              <span
+                class="px-3 py-1 border rounded-full text-xs font-semibold bg-amber-50 text-amber-700"
+              >
+                Sick
+              </span>
+            </div>
+
+            <div
+              class="rounded-xl shadow-sm border border-slate-200 p-4 flex items-center justify-between"
+            >
+              <div>
+                <p class="text-sm text-slate-500">Vacation Leaves</p>
+                <p class="text-lg font-semibold text-slate-900">
+                  {{ getVacationLeaveBalance() }} days remaining
+                </p>
+              </div>
+              <span
+                class="px-3 py-1 border rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700"
+              >
+                Vacation
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-6">
+          <h3 class="text-xl font-bold text-slate-900 text-center">Security</h3>
+          <p class="mt-3 text-center text-slate-600">
+            Keep your account secure by updating your password regularly.
+          </p>
+          <div class="flex items-center justify-center mt-6">
+            <button
+              class="rounded-xl px-5 py-3 font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 shadow-lg shadow-blue-600/20 transition"
+              (click)="onChangePassword()"
+            >
+              Change Password
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>

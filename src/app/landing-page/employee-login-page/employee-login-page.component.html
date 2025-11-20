@@ -1,0 +1,144 @@
+<div
+  class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center p-4"
+  id="employee-login"
+>
+  <div class="w-full max-w-md">
+    <div
+      class="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-xl ring-1 ring-slate-100 p-8 md:p-10"
+    >
+      <div class="flex items-center justify-between">
+        <button
+          type="button"
+          (click)="onClickBackButton()"
+          class="inline-flex items-center gap-2 text-slate-700 hover:text-slate-900 px-3 py-2 rounded-lg hover:bg-slate-100 transition"
+          aria-label="Back"
+        >
+          <span class="text-lg">←</span>
+        </button>
+
+        <div class="inline-flex items-center gap-3">
+          <img src="Logo.svg" alt="Chronos" class="h-10" />
+        </div>
+      </div>
+
+      <div class="mt-6 text-center">
+        <h1
+          class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900"
+        >
+          Welcome Back!
+        </h1>
+        <p class="mt-2 text-sm text-slate-600">
+          Sign in to continue to your dashboard
+        </p>
+      </div>
+
+      <form
+        [formGroup]="loginForm"
+        (ngSubmit)="onClickLogin()"
+        class="mt-8 space-y-5"
+      >
+        <div>
+          <label
+            for="email"
+            class="block text-sm font-medium text-slate-700 mb-2"
+          >
+            Email
+          </label>
+          <input
+            formControlName="email"
+            type="email"
+            id="email"
+            placeholder="Enter Email ID"
+            class="w-full rounded-xl border bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition"
+            [ngClass]="{
+              'border-green-400 focus:border-green-500 focus:ring-green-100':
+                loginForm.get('email')?.valid,
+              'border-red-400 focus:border-red-500 focus:ring-red-100':
+                loginForm.get('email')?.invalid &&
+                loginForm.get('email')?.touched
+            }"
+          />
+          @if(loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
+            <div class = "text-red-600 text-xs mt-2 ml-1">
+              Email is required
+            </div>
+          }
+          @if(loginForm.get('email')?.hasError('email') && loginForm.get('email')?.dirty){
+          <div class="text-red-600 text-xs mt-2 ml-1">
+            Please enter a valid employee email
+          </div>
+          }
+        </div>
+
+        <div>
+          <label
+            for="password"
+            class="block text-sm font-medium text-slate-700 mb-2"
+          >
+            Password
+          </label>
+          <input
+            formControlName="password"
+            type="password"
+            id="password"
+            placeholder="Enter password"
+            class="w-full rounded-xl border bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition"
+            [ngClass]="{
+              'border-red-400 focus:border-red-500 focus:ring-red-100':
+                loginForm.get('password')?.invalid &&
+                loginForm.get('password')?.touched
+            }"
+          />
+          @if(loginForm.get('password')?.invalid &&
+          loginForm.get('password')?.touched){
+          <div class="text-red-600 text-xs mt-2 ml-1">Password is required</div>
+          }
+        </div>
+
+        <button
+          [disabled]="loginForm.invalid"
+          type="submit"
+          class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 text-white font-semibold py-3 shadow-lg shadow-blue-600/20 hover:bg-blue-700 active:bg-blue-800 disabled:bg-slate-300 disabled:text-slate-600 disabled:shadow-none disabled:cursor-not-allowed transition"
+        >
+          {{ isLoading() ? "Logging In..." : "Login" }}
+        </button>
+      </form>
+
+      <div class="mt-4 text-center">
+        <a
+          (click)="onClickForgotPassword()"
+          class="text-sm font-medium text-slate-700 hover:text-slate-900 hover:underline cursor-pointer"
+        >
+          Forgot Password?
+        </a>
+      </div>
+
+      @if(loginMessageStatus()){
+      <div
+        class="text-center p-3 mt-6 w-full font-semibold rounded-xl text-sm border"
+        [ngClass]="{
+          'bg-green-50 text-green-800 border-green-200':
+            loginMessageStatus() === 'success',
+          'bg-red-50 text-red-800 border-red-200':
+            loginMessageStatus() === 'failed'
+        }"
+      >
+        {{
+          loginMessageStatus() === "success"
+            ? "Welcome"
+            : "Login Failed, please check credentials"
+        }}
+      </div>
+      }
+
+      <div class="text-center w-full mt-8 pt-6 border-t border-slate-200">
+        <a
+          (click)="onClickManagerAccess()"
+          class="inline-flex items-center justify-center gap-2 text-sm font-medium text-slate-700 hover:text-slate-900 px-4 py-2 rounded-lg hover:bg-slate-100 transition cursor-pointer"
+        >
+          Click here for Manager Access Only
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

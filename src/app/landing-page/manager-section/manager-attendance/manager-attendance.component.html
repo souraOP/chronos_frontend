@@ -1,0 +1,74 @@
+<div class="">
+  <header class="p-[33px] flex items-center justify-between border-b">
+    <h1 class="text-sm text-gray-800">
+      Chronos - Manager's Team Attendance Management
+    </h1>
+  </header>
+
+  <div class="p-6 lg:pr-40">
+    <div class="mb-4">
+      <label for="datePicker" class="font-semibold mr-2">Select Date:</label>
+      <input
+        id="datePicker"
+        type="date"
+        [(ngModel)]="selectedDate"
+        (change)="onDateChange()"
+        [max]="today"
+        class="border px-2 py-1 rounded"
+      />
+    </div>
+
+    <div
+      class="attendance border border-[#D5CFCF] p-4 rounded-lg shadow-xl bg-white"
+    >
+      <h3 class="text-lg font-semibold mb-4">
+        Attendance on {{ selectedDate }}
+      </h3>
+      <table class="min-w-full">
+        <thead class="">
+          <tr class="bg-gray-100">
+            <th class="border px-3 py-2">Employee</th>
+            <th class="border px-3 py-2">Check-In</th>
+            <th class="border px-3 py-2">Check-Out</th>
+            <th class="border px-3 py-2">Hours</th>
+            <th class="border px-3 py-2">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (record of teamsAttendanceRow; track record.displayEmployeeId) {
+          <tr>
+            <td class="border px-3 py-2">{{ record.displayEmployeeId }}</td>
+            <td class="border px-3 py-2">
+              {{ (record.checkIn | date : "shortTime") || "--" }}
+            </td>
+            <td class="border px-3 py-2">
+              {{ (record.checkOut | date : "shortTime") || "--" }}
+            </td>
+            <td class="border px-3 py-2">
+              {{ record.hoursWorked.toFixed(5) }}
+            </td>
+            <td class="border px-3 py-2">
+              <span
+                [ngClass]="{
+                  'text-green-600 font-bold': record.attendanceStatus === 'COMPLETE',
+                  'text-red-600 font-bold': record.attendanceStatus === 'ACTIVE',
+                }"
+              >
+                {{ record.attendanceStatus }}
+              </span>
+            </td>
+          </tr>
+          }
+
+          <!-- Show fallback if no records -->
+
+          <tr *ngIf="teamsAttendanceRow?.length === 0">
+            <td colspan="5" class="text-center text-gray-500 py-4">
+              No attendance records found for this date.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

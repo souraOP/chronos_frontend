@@ -1,0 +1,267 @@
+<main class="overflow-y-auto">
+  <header class="p-[33px] flex items-center justify-between border-b">
+    <p class="text-sm text-gray-800">Chronos - Shift Management</p>
+  </header>
+  <div class="p-6 lg:pr-40">
+    <div class="flex items-center justify-between mb-[58px]">
+      <div>
+        <h1 class="text-3xl font-bold">My Shifts</h1>
+        <p class="mt-5">View your scheduled shifts and swap requests</p>
+      </div>
+      <button
+        (click)="openModal()"
+        class="bg-blue-600 p-3 text-white rounded-full hover:bg-gray-600 shadow-lg"
+      >
+        Request Swaps
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1">
+      <app-all-upcoming-shifts />
+
+      <div
+        class="bg-white rounded-xl border p-6 border-[#D5CFCF] mt-8 shadow-lg"
+      >
+        <h2 class="font-semibold">Shift Swap Request</h2>
+        <p class="text-sm text-gray-500 mb-6">
+          Requests to swap shift with other employees
+        </p>
+
+        <div class="space-y-6">
+          @for(request of shiftSwapRequestEmployeeTable; track
+          request.shiftSwapId){
+          <div class="p-5 rounded-lg border border-[#D5CFCF] shadow-sm">
+            <div class="flex justify-between items-start mb-4">
+              <div class="">
+                <p class="font-semibold">
+                  From: {{ request.fromEmployeeName }}
+                </p>
+                <p class="">To: {{ request.toEmployeeName }}</p>
+              </div>
+              <span
+                class="text-sm bg-gray-400 text-gray-700 px-2 py-1 rounded-full border border-[#D5CFCF]"
+                [ngClass]="{
+                  'bg-green-200 text-green-600': request.status === 'APPROVED',
+                  'bg-red-200 text-red-600': request.status === 'REJECTED'
+                }"
+              >
+                {{ request.status | titlecase }}
+              </span>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 text-sm">
+              <div class="">
+                <p class="mb-1 font-semibold">Offering Shift:</p>
+                <p>
+                  {{ request.offeringShiftDate | date }}
+                </p>
+                <p>
+                  {{ request.offeringShiftStartTime | date : "shortTime" }} -
+                  {{ request.offeringShiftEndTime | date : "shortTime" }}
+                </p>
+                <p>{{ request.offeringShiftType | titlecase }} Shift</p>
+                <p class="">
+                  Location: <span>{{ request.offeringShiftLocation }}</span>
+                </p>
+              </div>
+              <div>
+                <p class="mb-1 font-semibold">Requesting Shift:</p>
+                <p>
+                  {{ request.requestingShiftDate | date }}
+                </p>
+                <p>
+                  {{ request.requestingShiftStartTime | date : "shortTime" }} -
+                  {{ request.requestingShiftEndTime | date : "shortTime" }}
+                </p>
+                <p>{{ request.requestingShiftType | titlecase }} Shift</p>
+                <p class="">
+                  Location: <span>{{ request.requestingShiftLocation }}</span>
+                </p>
+              </div>
+            </div>
+            <div class="flex justify-between items-start">
+              <div class="mt-3 text-sm text-gray-500">
+                <p class="text-sm text-gray-500">
+                  Reason: <span>{{ request.reason }}</span>
+                </p>
+              </div>
+              <div class="mt-3 text-gray-400">
+                <p class="text-xs">
+                  Handled By:
+                  <span class="font-semibold italic">{{
+                    request.approvedByName || "--"
+                  }}</span>
+                </p>
+                <p class="text-xs">
+                  Handled Date:
+                  <span class="font-semibold italic">{{
+                    (request.approvedDate | date) || "--"
+                  }}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+      @if(isModalOpen()){
+      <div
+        (click)="closeModal()"
+        class="fixed z-40 inset-0 bg-black opacity-100 backdrop-blur-2xl flex items-center justify-center"
+      >
+        <div
+          class="bg-white w-full border p-6 max-w-lg rounded-xl m-4 shadow-lg"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="flex justify-between items-center pb-4 border-b">
+            <div>
+              <h2 class="text-xl font-semibold">Request Swap Shift</h2>
+              <p class="text-sm mt-1 text-gray-500">
+                Request swap with another employee
+              </p>
+            </div>
+            <button
+              (click)="closeModal()"
+              class="p-1 rounded-full hover:bg-gray-300 bg-blue-300 text-2xl"
+            >
+              &times;
+            </button>
+          </div>
+
+          <div class="py-6">
+            <form
+              [formGroup]="swapRequestForm"
+              (ngSubmit)="submitShiftSwapRequest($event)"
+              class="space-y-6"
+            >
+              <div>
+                <label
+                  for="your-shift-name"
+                  class="block mb-3 text-gray-700 font-bold"
+                  >Your Shift</label
+                >
+                <select
+                  id="your-shift-name"
+                  formControlName="offering_shift_id"
+                  required
+                  class="w-full px-4 py-2 border border-[#D5CFCF] rounded-lg shadow-sm focus:outline-none focus:border-blue-500 text-sm focus:ring-blue-500"
+                >
+                  <option value="" disabled selected>
+                    --Your upcoming shifts--
+                  </option>
+                  @for(shift of loggedInEmployeeShiftsInForm; track
+                  shift.shiftId){
+                  <option [value]="shift.id">
+                    {{ shift.shiftDate | date : "EE, MMM d" }} -
+                    {{ shift.shiftStartTime | date : "shortTime" }} -
+                    {{ shift.shiftEndTime | date : "shortTime" }} -
+                    {{ shift.shiftType | titlecase }} Shift
+                  </option>
+                  }
+                </select>
+                <div
+                  *ngIf="
+                    swapRequestForm.get('offering_shift_id')?.touched &&
+                    swapRequestForm.get('offering_shift_id')?.invalid
+                  "
+                  class="text-red-600 text-xs mt-2"
+                >
+                  Please select your shift.
+                </div>
+              </div>
+              <div>
+                <label
+                  for="swap-with-name"
+                  class="block mb-3 text-gray-700 font-bold"
+                  >Swap with</label
+                >
+                <select
+                  id="swap-with-name"
+                  formControlName="requested_employee_shift"
+                  required
+                  class="w-full px-3 py-2 border border-[#D5CFCF] rounded-lg shadow-sm focus:outline-none focus:border-blue-500 text-sm focus:ring-blue-500"
+                >
+                  <option value="" disabled selected>
+                    --Select employee name--
+                  </option>
+                  @for(emp of teamMembersUpcomingShifts; track emp?.id){
+                  <optgroup [label]="emp.firstName + ' ' + emp.lastName">
+                    @for(shift of emp.shifts; track shift.shiftId){
+                    <option [value]="emp.id + '|' + shift.id">
+                      {{ shift.shiftDate | date }} -
+                      {{ shift.shiftStartTime | date : "shortTime" }} -
+                      {{ shift.shiftEndTime | date : "shortTime" }} -
+                      {{ shift.shiftType | titlecase }} Shift
+                    </option>
+                    }
+                  </optgroup>
+                  }
+                </select>
+                <div
+                  *ngIf="
+                    swapRequestForm.get('requested_employee_shift')?.touched &&
+                    swapRequestForm.get('requested_employee_shift')?.invalid
+                  "
+                  class="text-red-600 text-xs mt-2"
+                >
+                  Please select an employee and shift to swap with.
+                </div>
+              </div>
+
+              <label for="reason" class="block mb-3 text-gray-700 font-bold"
+                >Reason</label
+              >
+              <input
+                type="text"
+                id="reason"
+                formControlName="reason"
+                placeholder="Provide a reason"
+                class="w-full border border-[#D5CFCF] px-3 py-1 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+              />
+              <div
+                *ngIf="
+                  swapRequestForm.get('reason')?.touched &&
+                  swapRequestForm.get('reason')?.errors
+                "
+                class="text-red-600 text-xs"
+              >
+                <div *ngIf="swapRequestForm.get('reason')?.errors?.['required']">
+                  Reason is required.
+                </div>
+                <div *ngIf="swapRequestForm.get('reason')?.errors?.['minlength']">
+                  Reason must be more than 10 characters.
+                </div>
+                <div *ngIf="swapRequestForm.get('reason')?.errors?.['onlyNumbers']">
+                  Reason cannot be only numbers
+                </div>
+                <div *ngIf="swapRequestForm.get('reason')?.errors?.['onlyAlphanumeric']">
+                  Add spaces or punctuation; not just letters/numbers.
+                </div>
+              </div>
+
+              <div
+                class="flex items-center justify-end-safe pt-5 space-x-6 mt-8"
+              >
+                <button
+                  type="button"
+                  (click)="closeModal()"
+                  class="bg-white px-4 py-2 font-semibold border border-[#D5CFCF] rounded-full hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  [disabled]="swapRequestForm.invalid"
+                  class="shadow-xl font-medium text-sm px-4 py-2 rounded-full bg-black text-white transition-colors hover:bg-green-700 ease-in-out"
+                >
+                  Submit Request
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</main>

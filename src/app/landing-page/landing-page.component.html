@@ -1,0 +1,75 @@
+<div class="lg:px-16" id="landing">
+  <nav
+    class="px-4 sm:px-6 lg:px-16 py-4 flex items-center justify-between mx-auto container"
+  >
+    <div>
+      <img src="Logo.svg" alt="Chronos" class="h-10" />
+    </div>
+    <div class="hidden md:flex items-center space-x-6">
+      <a
+        class="text-gray-600 hover:text-gray-900 transition-colors hover:underline hover:scale-103"
+        >Home</a
+      >
+      <a
+        class="text-gray-600 hover:text-gray-900 transition-colors hover:underline hover:scale-103"
+        >Contact</a
+      >
+      <a
+        class="text-gray-600 hover:text-gray-900 transition-colors hover:underline hover:scale-103"
+        >About</a
+      >
+      <button
+        (click)="onClickLogin()"
+        class="bg-gray-800 text-white px-4 py-2 rounded-2xl hover:scale-105 hover:bg-gray-500 transition-colors shadow-xl"
+      >
+        Log In
+      </button>
+    </div>
+
+    <button class="md:hidden">
+      <img src="burger-menu.svg" alt="Chronos" class="h-8" />
+    </button>
+  </nav>
+
+  <header
+    class="container mx-auto px-4 sm:px-6 lg:px-16 text-center pt-20 pb-16 md:pt-32 md:pb-24"
+  >
+    <h1
+      class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight"
+    >
+      simplify leave and attendance<br />w/
+      <span
+        class="text-transparent bg-clip-text bg-gradient-to-r from-[#E6ADAD] via-[#ED4C9F] to-[#006FE6]"
+        >Chronos.</span
+      >
+    </h1>
+    <p class="mt-4 text-lg sm:text-xl text-gray-600">
+      Employee Leave and Attendance Management System
+    </p>
+    <button
+      (click)="onClickLogin()"
+      class="mt-8 bg-black text-white animate-bounce px-8 py-3 rounded-xl hover:bg-gray-700 transition-transform hover:scale-105 shadow-xl hover:shadow-2xl"
+    >
+      Learn More
+    </button>
+  </header>
+
+  <div class="container mx-auto px-4 sm:px-6 lg:px-10 mb-16">
+    <div
+      class="w-full max-w-5xl mx-auto overflow-hidden rounded-2xl shadow-2xl"
+    >
+      <img
+        src="EmployeeDashboardScreen1.png"
+        alt="hero-section-image"
+        width="1000"
+        height="900"
+        class="w-full h-auto object-cover"
+      />
+    </div>
+  </div>
+
+  <footer class="text-center py-6 text-gray-600 text-sm">
+    <p>&copy; Chronos. All rights reserved.</p>
+    <p>Made with ❤️ by ADM25JFSA007 POD-4 Team</p>
+  </footer>
+</div>

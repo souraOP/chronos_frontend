@@ -1,0 +1,355 @@
+<main class="overflow-y-auto">
+  <header class="p-[33px] flex items-center justify-between border-b">
+    <h1 class="text-sm text-gray-800">
+      Chronos - Manager's Team Leave Requests
+    </h1>
+  </header>
+
+  <div class="p-6 lg:pr-25">
+    <div class="flex items-center justify-between mb-12">
+      <div>
+        <h2 class="text-3xl font-bold text-gray-900">
+          Team's Leave Management
+        </h2>
+        <p class="mt-5 text-gray-600">
+          Review and manage your team's leave requests.
+        </p>
+      </div>
+
+      <button
+        (click)="openModal()"
+        class="bg-black p-3 text-white rounded-full hover:bg-gray-600 shadow-xl"
+      >
+        Create Leave Balance
+      </button>
+
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
+        <h4 class="text-lg font-semibold text-gray-700">Pending</h4>
+        <p class="mt-4 flex items-baseline space-x-2">
+          <span class="text-4xl font-bold text-yellow-600">{{
+            teamLeaveRequestStats?.pending
+          }}</span>
+          <span class="text-sm text-gray-500">Requests</span>
+        </p>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
+        <h4 class="text-lg font-semibold text-gray-700">Approved</h4>
+        <p class="mt-4 flex items-baseline space-x-2">
+          <span class="text-4xl font-bold text-green-600">{{
+            teamLeaveRequestStats?.approved
+          }}</span>
+          <span class="text-sm text-gray-500">This month</span>
+        </p>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
+        <h4 class="text-lg font-semibold text-gray-700">Rejected</h4>
+        <p class="mt-4 flex items-baseline space-x-2">
+          <span class="text-4xl font-bold text-red-600">{{
+            teamLeaveRequestStats?.rejected
+          }}</span>
+          <span class="text-sm text-gray-500">This month</span>
+        </p>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
+        <h4 class="text-lg font-semibold text-gray-700">On Leave Today</h4>
+        <p class="mt-4 flex items-baseline space-x-2">
+          <span class="text-4xl font-bold text-blue-600">{{
+            teamLeaveRequestStats?.onLeaveToday
+          }}</span>
+          <span class="text-sm text-gray-500">Employees</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1">
+      <div
+        class="mb-4 border p-5 rounded-xl bg-white border-[#D5CFCF] shadow-xl"
+      >
+        <div class="mb-6">
+          <h4 class="text-xl font-semibold text-gray-800">Leave Requests</h4>
+          <p class="mt-1 text-gray-600">Review all employee's leave requests</p>
+        </div>
+
+        <div class="overflow-x-hidden">
+          <table class="border min-w-full divide-y divide-gray-500 bg-white">
+            <thead class="bg-gray-50">
+              <tr class="text-center font-bold">
+                <!-- <th scope="col" class=" py-3 text-sm uppercase">EMP ID</th> -->
+                <th scope="col" class="py-3 text-sm uppercase">
+                  Employee Name
+                </th>
+                <th scope="col" class="py-3 text-sm uppercase">Type</th>
+                <th scope="col" class="py-3 text-sm uppercase">Date</th>
+                <th scope="col" class="py-3 text-sm uppercase">Days</th>
+                <th scope="col" class="py-3 text-sm uppercase">Status</th>
+                <th scope="col" class="py-3 text-sm uppercase">Reason</th>
+                <th scope="col" class="py-3 text-sm uppercase">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (req of teamsLeaveRequest; track req.requestId){
+              <tr class="border-b hover:bg-gray-50 text-center">
+                <td class="py-4 whitespace-nowrap text-sm text-gray-700">
+                  {{ req.employeeFirstName }} {{ req.employeeLastName }}
+                </td>
+                <td class="py-4 whitespace-nowrap text-sm text-gray-700">
+                  {{ req.leaveType | titlecase }}
+                </td>
+                <td class="py-4 whitespace-nowrap text-sm text-gray-700">
+                  {{ req.startDate | date : "dd MMM" }} -
+                  {{ req.endDate | date : "dd MMM" }}
+                </td>
+                <td class="py-4 whitespace-nowrap text-sm text-gray-700">
+                  {{ req.days }}
+                </td>
+                <td class="py-4 whitespace-nowrap">
+                  <span
+                    class="px-2 inline-flex text-sm leading-5 font-semibold rounded-full border border-[#D5CFCF]"
+                    [ngClass]="{
+                      'bg-green-100 text-green-800': req.status === 'APPROVED',
+                      'bg-yellow-100 text-yellow-800': req.status === 'PENDING',
+                      'bg-red-100 text-red-800': req.status === 'REJECTED'
+                    }"
+                  >
+                    {{ req.status | titlecase }}
+                  </span>
+                </td>
+                <td class="py-4 whitespace-nowrap text-sm text-gray-700">
+                  {{ req.reason }}
+                </td>
+                <td class="py-4 whitespace-nowrap text-sm text-center">
+                  @if (req.status === 'PENDING') {
+                  <div class="flex items-center justify-center space-x-2">
+                    <button
+                      class="p-2 rounded-full hover:bg-green-100 transition-colors"
+                      (click)="
+                        openLeaveRequestConfirmationModal(
+                          req.requestId,
+                          'APPROVED'
+                        )
+                      "
+                    >
+                      <span class="text-green-500">✓</span>
+                    </button>
+                    <button
+                      class="p-2 rounded-full hover:bg-red-100 transition-colors"
+                      (click)="
+                        openLeaveRequestConfirmationModal(
+                          req.requestId,
+                          'REJECTED'
+                        )
+                      "
+                    >
+                      <span class="text-red-500">✕</span>
+                    </button>
+                  </div>
+                  } @else {
+                  <span>-</span>
+                  }
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if(confirmationModalOpen) {
+  <div
+    (click)="closeLeaveRequestConfirmationModal()"
+    class="fixed z-40 inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center"
+  >
+    <div
+      (click)="$event.stopPropagation()"
+      class="bg-white w-full max-w-md rounded-xl m-4 p-6 border border-gray-200 shadow-lg"
+    >
+      <h3 class="text-xl font-semibold text-gray-900">Confirm Action</h3>
+      @if(selectedRequest) {
+      <p class="mt-4 text-gray-600">
+        Are you sure to
+        @if (modalAction === 'APPROVED') {
+          <span class = "font-bold text-green-600">
+            Approve
+          </span>
+        } @else if (modalAction === 'REJECTED'){
+          <span class="font-bold text-red-600">
+            Reject
+          </span>
+        }
+        this leave request for
+        <strong
+          >{{ selectedRequest.employeeFirstName }}
+          {{ selectedRequest.employeeLastName }}</strong
+        >
+        ({{ selectedRequest.leaveType | titlecase }} Leave) [{{
+          selectedRequest.startDate | date : "MMM dd"
+        }}
+        - {{ selectedRequest.endDate | date : "MMM dd" }}] ?
+      </p>
+      }
+      <div class="flex items-center justify-end pt-5 space-x-6 mt-6">
+        <button
+          (click)="closeLeaveRequestConfirmationModal()"
+          type="button"
+          class="bg-white px-4 py-2 font-semibold border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
+          [disabled]="isLoading"
+        >
+          Cancel
+        </button>
+        <button
+          (click)="confirmLeaveRequest()"
+          [disabled]="isLoading"
+          class="shadow-xl font-medium text-sm px-4 py-2 rounded-full text-white transition-colors ease-in-out"
+          [ngClass]="{
+            'bg-green-600 hover:bg-green-700': modalAction === 'APPROVED',
+            'bg-red-600 hover:bg-red-700': modalAction === 'REJECTED'
+          }"
+        >
+          {{ isLoading ? "Processing..." : "Confirm" }}
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+  @if(isModalOpen){
+  <div
+    (click)="closeModal()"
+    class="fixed z-40 inset-0 bg-black opacity-100 backdrop-blur-2xl flex items-center justify-center"
+  >
+    <div
+      class="bg-white w-full border p-6 max-w-lg rounded-xl m-4 shadow-lg"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="flex justify-between items-center pb-4 border-b">
+        <div>
+          <h2 class="text-xl font-semibold">Create New Leave Balance</h2>
+          <p class="text-sm mt-1 text-gray-500">
+            Assign new leave balance to an employee
+          </p>
+        </div>
+        <button
+          (click)="closeModal()"
+          class="p-1 rounded-full hover:bg-gray-300 bg-blue-300 text-2xl"
+        >
+          &times;
+        </button>
+      </div>
+
+      <div class="py-6">
+        <form
+          class="space-y-6"
+          (ngSubmit)="createLeaveBalanceForEmployee()"
+          [formGroup]="createLeaveBalanceForm"
+        >
+          <div>
+            <label
+              for="employee-name"
+              class="block mb-3 text-gray-700 font-bold"
+              >Team Members</label
+            >
+            <select
+              id="employee-name"
+              name="employee_uuid"
+              required
+              formControlName="employee_uuid"
+              class="w-full px-4 py-2 border border-[#D5CFCF] rounded-lg shadow-sm focus:outline-none focus:border-blue-500 text-sm focus:ring-blue-500"
+            >
+              <option value="" disabled selected>--Choose an employee--</option>
+              @for(eachMember of teamEmployeesInForm; track eachMember.id){
+              <option [value]="eachMember.id">
+                {{ eachMember?.firstName }} {{ eachMember?.lastName }}
+              </option>
+              }
+            </select>
+            <div
+              *ngIf="
+                createLeaveBalanceForm.get('employee_uuid')?.touched &&
+                createLeaveBalanceForm.get('employee_uuid')?.invalid
+              "
+              class="text-red-500 text-xs mt-1"
+            >
+              Please select an employee
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="leave-type"
+              class="block mb-3 text-gray-700 font-bold"
+              >Leave Type</label
+            >
+            <select
+              id="leave-type"
+              name="leave_type"
+              required
+              formControlName="leave_type"
+              class="w-full px-4 py-2 border border-[#D5CFCF] rounded-lg shadow-sm focus:outline-none focus:border-blue-500 text-sm focus:ring-blue-500"
+            >
+              <option value="" disabled selected>--Choose a Leave Type--</option>
+              <option value="SICK">Sick</option>
+              <option value="PERSONAL">Personal</option>
+              <option value="VACATION">Vacation</option>
+              
+            </select>
+            <div
+              *ngIf="
+                createLeaveBalanceForm.get('leave_type')?.touched &&
+                createLeaveBalanceForm.get('leave_type')?.invalid
+              "
+              class="text-red-500 text-xs mt-1"
+            >
+              Please select a valid leave type
+            </div>
+          </div>
+
+          <label for="noOfDays" class="block mb-3 text-gray-700 font-bold"
+            >Number of Days</label
+          >
+          <input
+            type="number"
+            id="no_of_days"
+            formControlName="no_of_days"
+            placeholder="Enter the balance"
+            class="w-full border border-[#D5CFCF] px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-xs"
+          />
+
+          <div
+            *ngIf="
+              createLeaveBalanceForm.get('no_of_days')?.touched &&
+              createLeaveBalanceForm.get('no_of_days')?.invalid
+            "
+            class="text-red-500 text-xs"
+          >
+            Please provide a valid number of days
+          </div>
+
+          <div class="flex items-center justify-end-safe pt-5 space-x-6 mt-8">
+            <button
+              (click)="closeModal()"
+              class="bg-white px-4 py-2 font-semibold border border-[#D5CFCF] rounded-full hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              [disabled]="createLeaveBalanceForm.invalid"
+              class="shadow-xl font-medium text-sm px-4 py-2 rounded-full bg-black text-white transition-colors hover:bg-green-700 ease-in-out"
+            >
+              Create Leave Balance
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  }
+</main>

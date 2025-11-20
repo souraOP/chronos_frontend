@@ -1,0 +1,59 @@
+<div class="bg-white rounded-xl border p-6 border-[#D5CFCF] shadow-xl">
+  <p class="font-semibold">Team's Shift Overview</p>
+  <p class="text-sm text-gray-500 mt-2">
+    Current shift assignments for your team
+  </p>
+  <div class="overflow-x-hidden mt-5">
+    <table class="min-w-full">
+      <thead>
+        <tr class="border-b border-gray-600">
+          <th scope="col" class="py-3 font-bold tracking-tight">
+            Employee Name
+          </th>
+          <th scope="col" class="py-3 font-bold tracking-tight">Date</th>
+          <th scope="col" class="py-3 font-bold tracking-tight">Time</th>
+          <th scope="col" class="py-3 font-bold tracking-tight">Type</th>
+          <th scope="col" class="py-3 font-bold tracking-tight">Location</th>
+          <th scope="col" class="py-3 font-bold tracking-tight">Status</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y text-center divide-gray-300">
+        @for(shift of getShiftsByDate; track shift.shiftId){
+        <tr>
+          <td class="py-3 whitespace-nowrap text-sm">
+            {{ shift.employeeName }}
+          </td>
+          <td class="py-3 whitespace-nowrap text-sm">
+            {{ shift.shiftDate | date }}
+          </td>
+          <td class="py-3 whitespace-nowrap text-sm">
+            {{ shift.shiftStartTime | date : "shortTime" }} -
+            {{ shift.shiftEndTime | date : "shortTime" }}
+          </td>
+          <td class="py-3 whitespace-nowrap text-sm">
+            {{ shift.shiftType }}
+          </td>
+          <td class="py-3 whitespace-nowrap text-sm">
+            {{ shift.shiftLocation }}
+          </td>
+          <td class="py-3 whitespace-nowrap text-sm">
+            <span
+              class="bg-gray-200 p-2 rounded-lg"
+              [ngClass]="{'bg-green-200 text-green-800': shift.shiftStatus === 'CONFIRMED',
+                             'bg-yellow-200 text-yellow-800': shift.shiftStatus === 'PENDING',}"
+            >
+              {{ shift.shiftStatus | titlecase }}
+            </span>
+          </td>
+        </tr>
+        } @if(!getShiftDate || getShiftsByDate.length === 0){
+        <tr>
+          <td class="py-6 text-center" colspan="7">
+            No shift for the selected date
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

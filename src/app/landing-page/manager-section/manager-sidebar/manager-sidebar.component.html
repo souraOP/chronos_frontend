@@ -1,0 +1,64 @@
+<aside
+  class="w-70 flex flex-col h-screen flex-shrink-0 border-r rounded-r-xl bg-[#b9c7ff] z-40 transition-transform duration-300 md:translate-x-0 fixed md:static top-0 left-0"
+>
+  <div class="border-b p-3 relative">
+    <div class="flex items-center">
+      <div
+        class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center"
+      >
+        <img src="user-icon.svg" alt="Manager Profile Picture" class="h-8" />
+      </div>
+      <div class="ml-4">
+        <p
+          class="text-xs font-semibold bg-yellow-400 shadow-sm mb-1 py-0.5 px-1.5 text-center rounded-full border border-[#7e7777]"
+        >
+          {{ eachManager()?.role }}
+        </p>
+        <p class="font-semibold text-sm">{{ eachManager()?.employeeId }}</p>
+        <p class="text-xs text-gray-600">{{ eachManager()?.email }}</p>
+      </div>
+    </div>
+  </div>
+
+  <nav class="flex-grow px-4 py-6">
+    <ul>
+      @for(link of navItems; track link.id){
+      <li>
+        <a
+          [routerLink]="['/', 'manager-section', eachManager()?.uuid, link.id]"
+          class="flex items-center px-4 py-2.5 cursor-pointer"
+          routerLinkActive="bg-green-50 border font-semibold rounded-full border-[#D5CFCF] shadow-lg"
+          [routerLinkActiveOptions]="{ exact: true }"
+          ><span class="ml-3 text-sm">{{ link.name }}</span></a
+        >
+      </li>
+      }
+    </ul>
+  </nav>
+
+  <div class="px-4 py-10">
+    <ul>
+      <li>
+        <a
+          routerLinkActive="bg-indigo-50 border border-[#D5CFCF] rounded-full shadow-lg"
+          class="py-2.5 flex items-center px-4 cursor-pointer"
+          [routerLink]="[
+            '/',
+            'manager-section',
+            eachManager()?.uuid,
+            'manager-profile'
+          ]"
+        >
+          My Profile
+        </a>
+      </li>
+      <li>
+        <a
+          class="flex items-center px-4 py-2 my-1 cursor-pointer bg-sky-200 rounded-full hover:bg-red-300"
+          (click)="onLogout()"
+          ><span class="ml-3 text-red-700">Logout</span></a
+        >
+      </li>
+    </ul>
+  </div>
+</aside>

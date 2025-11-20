@@ -1,0 +1,36 @@
+<div class="bg-white p-6 rounded-xl border border-gray-300 shadow-xl">
+  <h3 class="font-bold text-gray-900">Recent Leave Requests</h3>
+  <p class="mt-1 text-gray-500">Status of your recent leave applications</p>
+
+  <div class="mt-5 divide-y divide-gray-100">
+    @for (lr of leaveRequests | slice:0:5; track lr.leaveRequestId) {
+
+    <div
+      class="flex items-center justify-between py-3 px-4 mt-2 border border-gray-200 shadow-sm hover:bg-gray-100 hover:shadow-lg transition duration-300 rounded-lg"
+    >
+      <div>
+        <p class="text-sm font-medium text-gray-800">
+          {{ lr.leaveType | titlecase }} Leave
+        </p>
+        <p class="text-xs text-gray-500 mt-0.5">
+          {{ lr.startDate | date : "MMM dd" }} —
+          {{ lr.endDate | date : "MMM dd" }}
+        </p>
+      </div>
+
+      <span
+        class="text-xs font-medium px-2 py-1 border rounded-full"
+        [ngClass]="
+          lr.status === 'APPROVED'
+            ? 'border-green-500 bg-green-50 text-green-700'
+            : lr.status === 'PENDING'
+            ? 'border-yellow-500 bg-yellow-50 text-yellow-700'
+            : 'border-red-500 bg-red-50 text-red-700'
+        "
+      >
+        {{ lr.status | titlecase }}
+      </span>
+    </div>
+    }
+  </div>
+</div>

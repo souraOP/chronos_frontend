@@ -1,0 +1,58 @@
+<div
+  class="bg-white p-6 rounded-2xl border border-gray-200 shadow-lg transition duration-300 hover:shadow-xl"
+>
+  <header class="mb-5 border-b border-gray-100 pb-4">
+    <h3 class="font-bold text-gray-800">Recent Leave Requests</h3>
+    <p class="mt-1 text-sm text-gray-500">Latest team leave requests</p>
+  </header>
+
+  @if (isLoading) {
+  <div class="py-10 text-center text-lg text-indigo-500 animate-pulse">
+    Loading activity...
+  </div>
+  } @else if (teamLeaveRequestsDashboard.length === 0) {
+  <div class="py-10 text-center text-gray-500">
+    <p>No recent leave requests or activity to display.</p>
+  </div>
+  } @else {
+  <ul class="space-y-4">
+    @for (lr of teamLeaveRequestsDashboard | slice:0:5; track lr.leaveRequestId)
+    {
+    <li
+      class="p-4 bg-gray-50 rounded-xl transition duration-200 hover:bg-gray-100 hover:shadow-lg border border-gray-300"
+    >
+      <div class="flex items-start justify-between">
+        <div class="flex-grow">
+          <p class="text-base font-semibold text-gray-800 truncate">
+            {{ lr.employeeName }}
+          </p>
+
+          <span
+            [ngClass]="{
+              'bg-blue-100 text-blue-800': lr.leaveType === 'VACATION',
+              'bg-green-100 text-green-800': lr.leaveType === 'SICK',
+              'bg-yellow-100 text-yellow-800': lr.leaveType === 'PERSONAL',
+              'bg-purple-100 text-purple-800':
+                lr.leaveType !== 'VACATION' &&
+                lr.leaveType !== 'SICK' &&
+                lr.leaveType !== 'PERSONAL'
+            }"
+            class="mt-1 inline-block px-3 py-1 text-xs font-medium rounded-full border"
+          >
+            {{ lr.leaveType | titlecase }}
+          </span>
+        </div>
+
+        <div class="text-right ml-4 flex-shrink-0">
+          <p class="text-sm font-medium text-gray-700">
+            {{ lr.startDate | date : "MMM dd" }} -
+            {{ lr.endDate | date : "MMM dd" }}
+          </p>
+          <p class="text-xs text-gray-400 mt-0.5">Dates</p>
+        </div>
+      </div>
+    </li>
+    }
+  </ul>
+  }
+</div>

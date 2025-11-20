@@ -1,0 +1,101 @@
+<main class="overflow-y-auto">
+  <header class="p-[33px] flex items-center justify-between border-b">
+    <p class="text-sm text-gray-800">Chronos - Manager's Report and Analytics</p>
+  </header>
+
+  <div class="p-6 space-y-8">
+    <section class="bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
+      <h2 class="text-lg font-semibold text-gray-900">
+        Team Attendance Summary
+      </h2>
+      <p class="mt-1 text-sm text-gray-600">
+        Select a date range and generate a summary for your team.
+      </p>
+
+      <form
+        (ngSubmit)="generateReport($event)"
+        [formGroup]="generateReportForm"
+      >
+        <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label
+              for="start_date"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Start Date</label
+            >
+            <input
+              id="start_date"
+              name="start_date"
+              type="date"
+              formControlName="start_date"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label
+              for="end_date"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >End Date</label
+            >
+            <input
+              id="end_date"
+              type="date"
+              name="end_date"
+              formControlName="end_date"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div class="flex items-end">
+            <button
+              type="submit"
+              class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
+              title="Generate report"
+            >
+              Generate
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+
+    <section class="bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
+      <h3 class="text-base font-semibold text-gray-900 mb-4">
+        Recent Team Reports
+      </h3>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+          <thead class="bg-gray-50">
+            <tr class="text-left text-sm text-gray-700">
+              <th class="px-4 py-3 border-b">Report ID</th>
+              <th class="px-4 py-3 border-b">Team ID</th>
+              <th class="px-4 py-3 border-b">Start Date</th>
+              <th class="px-4 py-3 border-b">End Date</th>
+              <th class="px-4 py-3 border-b text-center">Days Present</th>
+              <th class="px-4 py-3 border-b text-center">Days Absent</th>
+              <th class="px-4 py-3 border-b text-center">Hours Worked</th>
+              <th class="px-4 py-3 border-b">Generated At</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for(record of reportReponseTableView; track record.id) {
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 border-b">{{record.reportId}}</td>
+                <td class="px-4 py-3 border-b">{{record.teamId}}</td>
+                <td class="px-4 py-3 border-b">{{record.startDate | date }}</td>
+                <td class="px-4 py-3 border-b">{{record.endDate | date }}</td>
+                <td class="px-4 py-3 border-b text-center">{{record.totalDaysPresent}}</td>
+                <td class="px-4 py-3 border-b text-center">{{record.totalDaysAbsent}}</td>
+              <td class="px-4 py-3 border-b text-center">{{record.totalHoursWorked | number}}</td>
+              <td class="px-4 py-3 border-b">{{record.generatedAt | date: "medium"}}</td>
+            </tr>
+          }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
