@@ -16,6 +16,25 @@ export class ManagerDashboardService {
 
   private http = inject(HttpClient);
 
+  /**
+   * Retrieves the authenticated manager's UUID from local storage
+   *
+   * @description Extracts and validates the manager's unique identifier from the stored authentication token.
+   * This method is essential for all manager dashboard operations to ensure proper authorization
+   * and data scope limiting to the manager's team and responsibilities.
+   *
+   * @returns {string} The manager's UUID if authenticated, empty string if not authenticated or on error
+   *
+   * @throws {Alert} Shows alert dialog if manager is not logged in when parsing fails
+   *
+   * @example
+   * ```typescript
+   * const managerId = this.managerDashboardService.getUuid();
+   * if (managerId) {
+   *   // Manager is authenticated, proceed with dashboard operations
+   * }
+   * ```
+   */
   getUuid(): string {
     const loggedInUser = localStorage.getItem('auth');
     if (!loggedInUser) return '';
@@ -28,6 +47,28 @@ export class ManagerDashboardService {
     }
   }
 
+  /**
+   * Fetches the authenticated manager's name information for dashboard personalization
+   *
+   * @description Retrieves the first and last name of the currently logged-in manager
+   * for display purposes on the management dashboard. This provides personalized
+   * header information and user context throughout the management interface.
+   *
+   * @returns {Observable<EmployeeName>} Observable containing the manager's name details (firstName, lastName)
+   *
+   * @throws {HttpError} HTTP error if the request fails or manager is not found
+   *
+   * @example
+   * ```typescript
+   * this.managerDashboardService.getManagersName().subscribe({
+   *   next: (name) => {
+   *     this.managerDisplayName = `${name.firstName} ${name.lastName}`;
+   *     this.welcomeMessage = `Welcome back, ${name.firstName}!`;
+   *   },
+   *   error: (error) => console.error('Failed to load manager name:', error)
+   * });
+   * ```
+   */
   public getManagersName(): Observable<EmployeeName> {
     const uuid = this.getUuid();
     const url = `${this.managersEndpoint}/${uuid}/name`;
@@ -35,6 +76,29 @@ export class ManagerDashboardService {
     return this.http.get<EmployeeName>(url);
   }
 
+  /**
+   * Retrieves the total number of team members under the manager's supervision
+   *
+   * @description Fetches the count of active employees in the manager's team for dashboard
+   * metrics and overview displays. This metric is essential for team management insights
+   * and resource planning dashboards.
+   *
+   * @returns {Observable<number>} Observable containing the team size count, returns 0 if manager is not authenticated
+   *
+   * @throws {HttpError} HTTP error if the request fails or team information is not accessible
+   *
+   * @example
+   * ```typescript
+   * this.managerDashboardService.getTeamSize().subscribe({
+   *   next: (size) => {
+   *     this.teamSize = size;
+   *     this.teamSizeMetric = `${size} Team Members`;
+   *     this.updateDashboardMetrics();
+   *   },
+   *   error: (error) => console.error('Failed to load team size:', error)
+   * });
+   * ```
+   */
   public getTeamSize(): Observable<number> {
     const uuid = this.getUuid();
 
@@ -48,6 +112,30 @@ export class ManagerDashboardService {
     return this.http.get<number>(url);
   }
 
+  /**
+   * Fetches comprehensive leave request statistics for the manager's team
+   *
+   * @description Retrieves aggregated leave request data including pending requests,
+   * approved leaves, rejection counts, and other statistical information for dashboard
+   * analytics. This data supports managerial decision-making and team oversight.
+   *
+   * @returns {Observable<ManagerLeaveRequestData>} Observable containing leave request statistics and metrics
+   *
+   * @throws {HttpError} HTTP error if the request fails or data is not accessible
+   *
+   * @example
+   * ```typescript
+   * this.managerDashboardService.getTeamLeaveStats().subscribe({
+   *   next: (stats) => {
+   *     this.pendingLeaveRequests = stats.pendingCount;
+   *     this.approvedThisMonth = stats.approvedThisMonth;
+   *     this.totalLeaveRequestsThisYear = stats.totalThisYear;
+   *     this.updateLeaveMetrics(stats);
+   *   },
+   *   error: (error) => console.error('Failed to load leave statistics:', error)
+   * });
+   * ```
+   */
   public getTeamLeaveStats(): Observable<ManagerLeaveRequestData> {
     const uuid = this.getUuid();
 
@@ -59,6 +147,29 @@ export class ManagerDashboardService {
     return this.http.get<ManagerLeaveRequestData>(url);
   }
 
+  /**
+   * Retrieves recent team leave requests for dashboard overview
+   *
+   * @description Fetches a summary of recent leave requests from team members including
+   * request details, employee names, leave types, and statuses. This information is
+   * optimized for dashboard display providing managers with quick oversight capabilities.
+   *
+   * @returns {Observable<ManagerLeaveRequestDashboard[]>} Observable array of recent leave requests, returns empty array if manager is not authenticated
+   *
+   * @throws {HttpError} HTTP error if the request fails or leave request data is not accessible
+   *
+   * @example
+   * ```typescript
+   * this.managerDashboardService.getTeamLeaveRequests().subscribe({
+   *   next: (requests) => {
+   *     this.recentLeaveRequests = requests.slice(0, 10); // Show latest 10
+   *     this.pendingRequests = requests.filter(r => r.status === 'PENDING');
+   *     this.updateRecentActivity(requests);
+   *   },
+   *   error: (error) => console.error('Failed to load team leave requests:', error)
+   * });
+   * ```
+   */
   public getTeamLeaveRequests(): Observable<ManagerLeaveRequestDashboard[]> {
     const uuid = this.getUuid();
 
